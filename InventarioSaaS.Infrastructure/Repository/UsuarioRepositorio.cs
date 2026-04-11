@@ -1,5 +1,4 @@
-﻿
-using InventarioSaaS.Domain.DTO;
+﻿using InventarioSaaS.Domain.DTO;
 using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Infrastructure.ApplicationDbContext;
@@ -12,7 +11,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 
-namespace InventarioSaaS.Infrastructure.Repository.UsuarioRepository
+namespace InventarioSaaS.Infrastructure.Repository
 {
     public class UsuarioRepositorio : IUsuarioRepository
     {
@@ -73,6 +72,11 @@ namespace InventarioSaaS.Infrastructure.Repository.UsuarioRepository
         {
             var user = await dbContext.Users.Include(e => e.Empresa).FirstOrDefaultAsync(u=> u.Email == email);
             return user;
+        }
+
+        public async Task HacerAdmin(Usuario user)
+        {
+            await userManager.AddClaimAsync(user, new Claim("rol", "admin"));
         }
     }
 }

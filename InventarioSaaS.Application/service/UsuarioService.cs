@@ -123,5 +123,11 @@ namespace InventarioSaaS.Application.service
                 throw new NoContentEx("usuario no valido");
             }
         }
+
+        public async Task HacerAdmin(HacerAdminDto dto)
+        {
+            var usuario = await repository.BuscarUsuario(dto.Email);
+            await repository.HacerAdmin(usuario);
+        }
     }
 }

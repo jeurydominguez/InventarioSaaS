@@ -15,6 +15,7 @@ namespace InventarioSaaS.Infrastructure.ApplicationDbContext
         }
 
         public DbSet<Empresa> Empresa { get; set; }
+        public DbSet<Producto> Producto { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

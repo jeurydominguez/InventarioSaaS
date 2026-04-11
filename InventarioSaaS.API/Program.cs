@@ -4,7 +4,7 @@ using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Domain.IService;
 using InventarioSaaS.Infrastructure.ApplicationDbContext;
-using InventarioSaaS.Infrastructure.Repository.UsuarioRepository;
+using InventarioSaaS.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +27,8 @@ builder.Services.AddIdentity<Usuario, IdentityRole>()
 //inyeccion de dependecnias
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepositorio>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IProductoRepository, ProductoRepositorio>();
+builder.Services.AddScoped<IProductoService, ProductoService>();
 
 //configuracion del JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -48,7 +50,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     });
 
-builder.Services.AddAuthorization(option => option.AddPolicy("admin", politica => politica.RequireClaim("admin")));
+builder.Services.AddAuthorization(option => option.AddPolicy("admin", politica => politica.RequireClaim("rol", "admin")));
 
 var app = builder.Build();
 

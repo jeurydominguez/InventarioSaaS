@@ -10,5 +10,6 @@ namespace InventarioSaaS.Domain.IService
         Task<TokenDto> Registrar(RegistrarUsuarioDTO dto);
         Task<TokenDto> CrearToken(RegistrarUsuarioDTO dto);
         Task<TokenDto> Login(LogearUsuarioDto dto);
+        Task HacerAdmin(HacerAdminDto dto);
     }
 }

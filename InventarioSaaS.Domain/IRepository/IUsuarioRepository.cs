@@ -18,6 +18,7 @@ namespace InventarioSaaS.Domain.IRepository
         Task<SignInResult> ChekearPassword(Usuario user, LogearUsuarioDto dto);
         Task<Claim> BuscarClaimRol();
         Task<Usuario> BuscarUsuarioConEmpresa(string email);
+        Task HacerAdmin(Usuario user);
 
     }
 }

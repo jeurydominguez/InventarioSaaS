@@ -29,5 +29,13 @@ namespace InventarioSaaS.API.Controllers
             var token = await servicio.Login(dto);
             return Ok(token);
         }
+
+        [HttpPost("hacer-admin")]
+        [Authorize(Policy = "admin")]
+        public async Task<IActionResult> HacerAdmin(HacerAdminDto dto)
+        {
+            await servicio.HacerAdmin(dto);
+            return Ok();
+        }
     }
 }
