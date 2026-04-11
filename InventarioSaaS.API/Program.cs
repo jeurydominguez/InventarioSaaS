@@ -13,7 +13,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//Area de servicios
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -54,7 +54,7 @@ builder.Services.AddAuthorization(option => option.AddPolicy("admin", politica =
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// area de Middleware
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

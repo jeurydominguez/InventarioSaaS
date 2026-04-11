@@ -52,7 +52,7 @@ namespace InventarioSaaS.Infrastructure.Repository
 
         public async Task<Claim> BuscarClaimRol()
         {
-            var claim = httpContext.HttpContext!.User.Claims.Where(p => p.Type == "rol").FirstOrDefault();
+            var claim = httpContext.HttpContext!.User.Claims.Where(p => p.Type == "rol").FirstOrDefault(); //esto casi hace que pierda mis esperanzas por que me falto un "FirstOrDefault" JAJAJAJA
             return claim;
         }
 
@@ -70,13 +70,13 @@ namespace InventarioSaaS.Infrastructure.Repository
 
         public async Task<Usuario>BuscarUsuarioConEmpresa(string email)
         {
-            var user = await dbContext.Users.Include(e => e.Empresa).FirstOrDefaultAsync(u=> u.Email == email);
+            var user = await dbContext.Users.Include(e => e.Empresa).FirstOrDefaultAsync(u=> u.Email == email); //busca el usuario con su respectiva empresa
             return user;
         }
 
         public async Task HacerAdmin(Usuario user)
         {
-            await userManager.AddClaimAsync(user, new Claim("rol", "admin"));
+            await userManager.AddClaimAsync(user, new Claim("rol", "admin")); //repito , no queria hacerlo asi pero no se si habian metodos mejores 
         }
     }
 }

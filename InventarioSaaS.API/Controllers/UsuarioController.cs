@@ -30,6 +30,7 @@ namespace InventarioSaaS.API.Controllers
             return Ok(token);
         }
 
+        //no queria hacerlo de esta forma pero es posible que sea la unica a largo plazo , esperemos no rompa nada 
         [HttpPost("hacer-admin")]
         [Authorize(Policy = "admin")]
         public async Task<IActionResult> HacerAdmin(HacerAdminDto dto)

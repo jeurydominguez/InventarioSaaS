@@ -53,6 +53,7 @@ namespace InventarioSaaS.Application.service
             dto.rol = "admin";
             var usuario = Mapper.UsuarioMapper.AUsuario(dto, empresa);
 
+            //tomara sentido mas adelante por que habra un endpoint para poder crear los usuarios que no son admins de esa empresa pero para un usuario admin, es decir , ese registrar token funcionara siempre
             var result = await repository.CrearUsuario(usuario, dto);
             if (result.Succeeded)
             {

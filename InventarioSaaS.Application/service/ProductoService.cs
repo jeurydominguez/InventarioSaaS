@@ -17,6 +17,7 @@ namespace InventarioSaaS.Application.service
             this.repository = repository;
         }
 
+        //tengo que poner mas verificadores 
         public async Task Crear(CrearProductoDto dto)
         {
             var empresa = await repository.BuscarClaimEmpresaID();
