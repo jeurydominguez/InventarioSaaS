@@ -30,7 +30,6 @@ namespace InventarioSaaS.Application.Mapper
                 NombreUsuario = user.UserName,
                 EmpresaEmail = user.Empresa.Email,
                 NombreEmpresa = user.Empresa.Nombre,
-                Empresa = user.Empresa,
                 EmpresaId = user.EmpresaId,
                 rol = user.Rol
             };

@@ -24,5 +24,13 @@ namespace InventarioSaaS.API.Controllers
             await service.Crear(dto);
             return Ok();
         }
+
+        [HttpGet("obtener-todos")]
+        [Authorize]
+        public async Task<IActionResult> ObtenerTodos()
+        {
+            var productos = await service.BuscarTodos();
+            return Ok(productos);
+        }
     }
 }

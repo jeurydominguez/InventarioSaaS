@@ -11,14 +11,14 @@ namespace InventarioSaaS.Domain.DTO
         [Required]
         public required string NombreEmpresa { get; set; }
 
-        public string rol { get; set; }
+        public string? rol { get; set; }
 
         [Required]
         [EmailAddress]
         public required string Email { get; set; }
 
         [Required]
-        public string? PassWord { get; set; }
+        public string PassWord { get; set; }
 
         [Required]
         [EmailAddress]
@@ -28,10 +28,8 @@ namespace InventarioSaaS.Domain.DTO
         public required string NombreUsuario { get; set; }
 
         [Required]
-        public string? Apellido { get; set; }
+        public string Apellido { get; set; }
 
         public int EmpresaId { get; set; }
-
-        public Empresa Empresa { get; set; }
     }
 }

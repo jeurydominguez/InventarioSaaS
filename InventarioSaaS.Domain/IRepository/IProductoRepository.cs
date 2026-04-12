@@ -10,5 +10,6 @@ namespace InventarioSaaS.Domain.IRepository
     {
         Task Crear(Producto producto);
         Task<string> BuscarClaimEmpresaID();
+        Task<List<Producto>> BuscarTodos(int empresaId);
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 using InventarioSaaS.Domain.IRepository;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventarioSaaS.Infrastructure.Repository
 {
@@ -29,6 +30,12 @@ namespace InventarioSaaS.Infrastructure.Repository
         {
             var claim = httpContext.HttpContext.User.Claims.Where(i => i.Type == "EmpresaId").FirstOrDefault().Value;
             return claim;
+        }
+
+        public async Task<List<Producto>> BuscarTodos(int empresaId)
+        {
+            var productos = await dbcontext.Producto.Where(e => e.EmpresaId == empresaId).ToListAsync();
+            return productos;
         }
     }
 }

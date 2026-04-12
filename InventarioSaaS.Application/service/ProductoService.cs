@@ -30,5 +30,24 @@ namespace InventarioSaaS.Application.service
 
             await repository.Crear(product);
         }
+
+        public async Task<List<LeerProductoDto>> BuscarTodos()
+        {
+            var empresaId = await repository.BuscarClaimEmpresaID();
+            if(empresaId == null)
+            {
+                throw new NotFoundEx("No se pudo obtener el id de la empresa");
+            }
+            int id = int.Parse(empresaId);
+
+            var productos = await repository.BuscarTodos(id);
+            if( productos.Count == 0)
+            {
+                throw new NoContentEx("no tienes productos creados");
+            }
+
+            var dtos = Mapper.ProductoMapper.AListaDto(productos);
+            return dtos;
+        }
     }
 }
