@@ -1,5 +1,6 @@
 ﻿using InventarioSaaS.Application.EX;
 using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Domain.IService;
 using System;
@@ -48,6 +49,49 @@ namespace InventarioSaaS.Application.service
 
             var dtos = Mapper.ProductoMapper.AListaDto(productos);
             return dtos;
+        }
+
+        public async Task Editar(int id, EditarProductoDto dto)
+        {
+            var empresaId = await repository.BuscarClaimEmpresaID();
+            if(empresaId == null)
+            {
+                throw new NotFoundEx("No se pudo obtener el id de la empresa");
+            }
+            int idEmpresa = int.Parse(empresaId);
+            dto.EmpresaId = idEmpresa;
+
+            var productoEncontrado = await repository.BuscarProducto(idEmpresa, id);
+            if (productoEncontrado == null)
+            {
+                throw new NoContentEx("Producto no encontrado");
+            }
+            productoEncontrado.Nombre = dto.Nombre;
+            productoEncontrado.PrecioVenta = dto.PrecioVenta;
+            productoEncontrado.Stock = dto.Stock;
+
+            await repository.Editar(productoEncontrado);
+        }
+
+        public async Task<LeerProductoDto> BuscarProductoPorId(int id)
+        {
+            var empresaId = await repository.BuscarClaimEmpresaID();
+            if (empresaId == null)
+            {
+                throw new NotFoundEx("No se pudo obtener el id de la empresa");
+            }
+            int IdEmpresa = int.Parse(empresaId);
+
+            var producto = await repository.BuscarProducto(IdEmpresa, id);
+            if(producto == null)
+            {
+                throw new NoContentEx("Producto no encontrado");
+            }
+
+            var dto = Mapper.ProductoMapper.ALeerProductoDto(producto);
+
+            return dto;
+
         }
     }
 }

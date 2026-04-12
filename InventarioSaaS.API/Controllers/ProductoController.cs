@@ -32,5 +32,20 @@ namespace InventarioSaaS.API.Controllers
             var productos = await service.BuscarTodos();
             return Ok(productos);
         }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> ObtenerPorId(int id)
+        {
+            var producto = await service.BuscarProductoPorId(id);
+            return Ok(producto);
+        }
+
+        [HttpPut("{id:int}")]//cambiar a patch, ver documentacion para implementar
+        [Authorize(Policy = "admin")]
+        public async Task<IActionResult> Actualizar(int id, EditarProductoDto dto)
+        {
+            await service.Editar(id, dto);
+            return CreatedAtAction(nameof(ObtenerPorId), new { id = id }, dto);
+        }
     }
 }

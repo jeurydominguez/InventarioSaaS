@@ -37,5 +37,28 @@ namespace InventarioSaaS.Application.Mapper
 
             return productosDtos;
         }
+
+        public static LeerProductoDto ALeerProductoDto(Producto producto)
+        {
+            return new LeerProductoDto
+            {
+                Id = producto.Id,
+                Nombre = producto.Nombre,
+                PrecioVenta = producto.PrecioVenta,
+                Stock = producto.Stock
+            };
+        }
+
+        public static Producto AModeloEditarProducto(int id, EditarProductoDto dto)
+        {
+            return new Producto
+            {
+                Id = id,
+                Nombre = dto.Nombre,
+                PrecioVenta = dto.PrecioVenta,
+                Stock = dto.Stock,
+                EmpresaId = dto.EmpresaId
+            };
+        }
     }
 }

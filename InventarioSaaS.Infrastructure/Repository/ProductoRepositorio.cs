@@ -23,7 +23,7 @@ namespace InventarioSaaS.Infrastructure.Repository
         public async Task Crear(Producto producto)
         {
             await dbcontext.Producto.AddAsync(producto);
-            dbcontext.SaveChanges();
+            await dbcontext.SaveChangesAsync();
         }
 
         public async Task<string> BuscarClaimEmpresaID()
@@ -36,6 +36,18 @@ namespace InventarioSaaS.Infrastructure.Repository
         {
             var productos = await dbcontext.Producto.Where(e => e.EmpresaId == empresaId).ToListAsync();
             return productos;
+        }
+
+        public async Task<Producto> BuscarProducto(int empresaId, int productoId)
+        {
+            var productoDb = await dbcontext.Producto.Where(e => e.EmpresaId == empresaId && e.Id == productoId).FirstOrDefaultAsync();
+            return productoDb;
+        }
+
+        public async Task Editar(Producto producto)
+        {
+            dbcontext.Producto.Update(producto);
+            await dbcontext.SaveChangesAsync();
         }
     }
 }
