@@ -2,6 +2,7 @@
 using InventarioSaaS.Domain.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventarioSaaS.API.Controllers
@@ -40,12 +41,31 @@ namespace InventarioSaaS.API.Controllers
             return Ok(producto);
         }
 
-        [HttpPut("{id:int}")]//cambiar a patch, ver documentacion para implementar
+        [HttpPatch("{id:int}")]//este es patch, se hacen unos movimientos raros que tengo que explicar 
         [Authorize(Policy = "admin")]
-        public async Task<IActionResult> Actualizar(int id, EditarProductoDto dto)
+        public async Task<IActionResult> Actualizar(int id, JsonPatchDocument<EditarProductoDto> patchDocument)
         {
-            await service.Editar(id, dto);
-            return CreatedAtAction(nameof(ObtenerPorId), new { id = id }, dto);
+            if(patchDocument == null)
+            {
+                return BadRequest("Vacio?");
+            }
+            var productoDto = await service.Editar(id);//aqui espero un dto con los datos del modelo 
+            patchDocument.ApplyTo(productoDto, ModelState); //se aplica el parche (path)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await service.Actualizar(productoDto); //aqui se envia de nuevo al service para que se aplique la logica 
+            return CreatedAtAction(nameof(ObtenerPorId), new { id = id }, patchDocument);
+        }
+
+        [HttpDelete("{id:int}")]
+        [Authorize(Policy = "admin")]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            await service.Eliminar(id);
+            return NoContent();
         }
     }
 }

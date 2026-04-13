@@ -13,5 +13,6 @@ namespace InventarioSaaS.Domain.IRepository
         Task<List<Producto>> BuscarTodos(int empresaId);
         Task<Producto> BuscarProducto(int empresaId, int productoId);
         Task Editar(Producto producto);
+        Task Eliminar(Producto modelo);
     }
 }

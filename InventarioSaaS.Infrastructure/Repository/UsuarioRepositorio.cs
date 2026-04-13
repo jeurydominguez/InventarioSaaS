@@ -35,8 +35,8 @@ namespace InventarioSaaS.Infrastructure.Repository
 
         public async Task GuardarEmpresa(Empresa empresa)
         {
-            await dbContext.Empresa.AddAsync(empresa);
-            dbContext.SaveChanges();
+            dbContext.Empresa.Add(empresa);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<IdentityResult> CrearUsuario(Usuario user, RegistrarUsuarioDTO dto)

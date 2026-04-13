@@ -22,7 +22,7 @@ namespace InventarioSaaS.Infrastructure.Repository
 
         public async Task Crear(Producto producto)
         {
-            await dbcontext.Producto.AddAsync(producto);
+            dbcontext.Producto.Add(producto);
             await dbcontext.SaveChangesAsync();
         }
 
@@ -47,6 +47,12 @@ namespace InventarioSaaS.Infrastructure.Repository
         public async Task Editar(Producto producto)
         {
             dbcontext.Producto.Update(producto);
+            await dbcontext.SaveChangesAsync();
+        }
+
+        public async Task Eliminar(Producto modelo)
+        {
+            dbcontext.Producto.Remove(modelo);
             await dbcontext.SaveChangesAsync();
         }
     }

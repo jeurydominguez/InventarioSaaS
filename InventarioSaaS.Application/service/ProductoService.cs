@@ -3,9 +3,13 @@ using InventarioSaaS.Domain.DTO;
 using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Domain.IService;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Web.Mvc;
 
 namespace InventarioSaaS.Application.service
 {
@@ -51,7 +55,7 @@ namespace InventarioSaaS.Application.service
             return dtos;
         }
 
-        public async Task Editar(int id, EditarProductoDto dto)
+        public async Task<EditarProductoDto> Editar(int id)
         {
             var empresaId = await repository.BuscarClaimEmpresaID();
             if(empresaId == null)
@@ -59,18 +63,32 @@ namespace InventarioSaaS.Application.service
                 throw new NotFoundEx("No se pudo obtener el id de la empresa");
             }
             int idEmpresa = int.Parse(empresaId);
-            dto.EmpresaId = idEmpresa;
 
             var productoEncontrado = await repository.BuscarProducto(idEmpresa, id); //se busca el producto la primera vez por que necesito saber si el producto existe en el contexto actual
             if (productoEncontrado == null && productoEncontrado.EmpresaId != idEmpresa)
             {
                 throw new NoContentEx("Producto no encontrado");
             }
-            productoEncontrado.Nombre = dto.Nombre;
-            productoEncontrado.PrecioVenta = dto.PrecioVenta;
-            productoEncontrado.Stock = dto.Stock;
 
-            await repository.Editar(productoEncontrado);
+            var productoDto = Mapper.ProductoMapper.AEditarProductoDto(productoEncontrado);// lo convertimos a Dto para enviarlo al controller y aplicarle el parche
+            return productoDto;
+        }
+
+        public async Task Actualizar(EditarProductoDto dto)
+        {
+            var producto = await repository.BuscarProducto(dto.EmpresaId, dto.Id);//se busca una segunda vez para tener el producto original de la base de datos 
+            if(producto == null && producto.EmpresaId != dto.EmpresaId)
+            {
+                throw new NoContentEx("Producto no encontrado");
+            }
+
+            //se aplican los cambios que recibo del dto ya parcheado desde el controller
+            producto.Nombre = dto.Nombre;
+            producto.PrecioVenta = dto.PrecioVenta;
+            producto.Stock = dto.Stock;
+
+            //aqui termina todo , es complicado por cuestiones de logica pero funciona 10/10
+            await repository.Editar(producto);
         }
 
         public async Task<LeerProductoDto> BuscarProductoPorId(int id)
@@ -83,7 +101,7 @@ namespace InventarioSaaS.Application.service
             int IdEmpresa = int.Parse(empresaId);
 
             var producto = await repository.BuscarProducto(IdEmpresa, id);
-            if(producto == null)
+            if(producto == null && producto.EmpresaId != IdEmpresa)
             {
                 throw new NoContentEx("Producto no encontrado");
             }
@@ -91,6 +109,23 @@ namespace InventarioSaaS.Application.service
             var dto = Mapper.ProductoMapper.ALeerProductoDto(producto);
 
             return dto;
+        }
+
+        public async Task Eliminar(int id)
+        {
+            var empresaId = await repository.BuscarClaimEmpresaID();
+            if(empresaId == null)
+            {
+                throw new NoContentEx("Credenciales Incorrectas");
+            }
+            int idEmpresa = int.Parse(empresaId);
+
+            var producto = await repository.BuscarProducto(idEmpresa, id);
+            if(producto == null && producto.EmpresaId != idEmpresa)
+            {
+                throw new NoContentEx("Producto no encontrado");
+            }
+            await repository.Eliminar(producto);
 
         }
     }

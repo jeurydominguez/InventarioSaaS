@@ -49,15 +49,28 @@ namespace InventarioSaaS.Application.Mapper
             };
         }
 
-        public static Producto AModeloEditarProducto(int id, EditarProductoDto dto)
+        public static Producto AModeloEditarProducto(EditarProductoDto dto)
         {
             return new Producto
             {
-                Id = id,
+                Id = dto.Id,
                 Nombre = dto.Nombre,
                 PrecioVenta = dto.PrecioVenta,
                 Stock = dto.Stock,
                 EmpresaId = dto.EmpresaId
+            };
+        }
+
+        public static EditarProductoDto AEditarProductoDto(Producto producto)
+        {
+            return new EditarProductoDto
+            {
+                Id = producto.Id,
+                Nombre = producto.Nombre,
+                PrecioVenta = producto.PrecioVenta,
+                Stock = producto.Stock,
+                EmpresaId = producto.EmpresaId,
+                CategoriaId = producto.CategoriaId
             };
         }
     }

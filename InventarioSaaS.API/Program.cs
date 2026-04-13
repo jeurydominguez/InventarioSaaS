@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 //Area de servicios
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddOpenApi();
 
 //configuracion del db context
@@ -52,12 +52,16 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(option => option.AddPolicy("admin", politica => politica.RequireClaim("rol", "admin")));
 
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // area de Middleware
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseMiddleware<MiddlewareEx>();
