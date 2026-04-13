@@ -61,8 +61,8 @@ namespace InventarioSaaS.Application.service
             int idEmpresa = int.Parse(empresaId);
             dto.EmpresaId = idEmpresa;
 
-            var productoEncontrado = await repository.BuscarProducto(idEmpresa, id);
-            if (productoEncontrado == null)
+            var productoEncontrado = await repository.BuscarProducto(idEmpresa, id); //se busca el producto la primera vez por que necesito saber si el producto existe en el contexto actual
+            if (productoEncontrado == null && productoEncontrado.EmpresaId != idEmpresa)
             {
                 throw new NoContentEx("Producto no encontrado");
             }
