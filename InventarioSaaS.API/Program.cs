@@ -29,6 +29,8 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepositorio>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IProductoRepository, ProductoRepositorio>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
 
 //configuracion del JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
