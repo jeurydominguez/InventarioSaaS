@@ -37,5 +37,23 @@ namespace InventarioSaaS.Infrastructure.Repository
             dbcontext.Cliente.Add(modelo);
             await dbcontext.SaveChangesAsync();
         }
+
+        public async Task<List<Cliente>> ObtenerTodo(int id)
+        {
+            var clientes = await dbcontext.Cliente.Where(e => e.EmpresaId == id).ToListAsync();
+            return clientes;
+        }
+
+        public async Task Actualizar(Cliente cliente)
+        {
+            dbcontext.Cliente.Update(cliente);
+            await dbcontext.SaveChangesAsync();
+        }
+
+        public async Task Eliminar(Cliente modelo)
+        {
+            dbcontext.Cliente.Remove(modelo);
+            await dbcontext.SaveChangesAsync();
+        }
     }
 }

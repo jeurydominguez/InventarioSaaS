@@ -10,5 +10,8 @@ namespace InventarioSaaS.Domain.IRepository
         Task<string> BuscarEmpresaId();
         Task<Cliente> ObtenerPorId(int empresaId, int id);
         Task Crear(Cliente modelo);
+        Task<List<Cliente>> ObtenerTodo(int id);
+        Task Actualizar(Cliente cliente);
+        Task Eliminar(Cliente modelo);
     }
 }

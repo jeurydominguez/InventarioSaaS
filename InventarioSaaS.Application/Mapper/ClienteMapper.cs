@@ -29,5 +29,37 @@ namespace InventarioSaaS.Application.Mapper
                 Direccion = modelo.Direccion
             };
         }
+
+        public static List<LeerClienteDto> AListaLeerCliente(List<Cliente> modelos)
+        {
+            List<LeerClienteDto> dtos = new List<LeerClienteDto>();
+
+            foreach(var i in modelos)
+            {
+                var dto = new LeerClienteDto
+                {
+                    Id = i.Id,
+                    Nombre = i.Nombre,
+                    NumeroTelefono = i.NumeroTelefono,
+                    Direccion = i.Direccion
+                };
+
+                dtos.Add(dto);
+            }
+
+            return dtos;
+        }
+
+        public static ActualizarClienteDto AActualizarClienteDto(Cliente modelo)
+        {
+            return new ActualizarClienteDto
+            {
+                Id = modelo.Id,
+                Nombre = modelo.Nombre,
+                Direccion = modelo.Direccion,
+                NumeroTelefono = modelo.NumeroTelefono,
+                EmpresaId = modelo.EmpresaId
+            };
+        }
     }
 }
