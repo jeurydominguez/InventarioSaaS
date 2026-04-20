@@ -77,10 +77,10 @@ namespace InventarioSaaS.Application.service
 
             var claims = new List<Claim>//las famosas claims , creo que la de empresaEmail es irrelevante pero la dejaremos en el desarrollo para ver si usamos una forma de autenticarla por ahi
             {
-                new Claim("Email", usuario.Email),
+                new Claim("Id", usuario.Id),
+                new Claim("Email", usuario.Email!),
                 new Claim("EmpresaEmail", usuario.Empresa.Email),
-                new Claim("NombreUsuario", usuario.UserName),
-                new Claim("Apellido", usuario.UserName),
+                new Claim("NombreUsuario", usuario.UserName!),
                 new Claim("EmpresaId", usuario.EmpresaId.ToString()),
                 new Claim("rol", usuario.Rol)
             };

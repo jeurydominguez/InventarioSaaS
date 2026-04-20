@@ -17,6 +17,8 @@ namespace InventarioSaaS.Infrastructure.ApplicationDbContext
         public DbSet<Empresa> Empresa { get; set; }
         public DbSet<Producto> Producto { get; set; }
         public DbSet<Cliente> Cliente { get; set; }
+        public DbSet<Venta> Venta { get; set; }
+        public DbSet<DetalleVenta> Detalle { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -28,6 +30,11 @@ namespace InventarioSaaS.Infrastructure.ApplicationDbContext
                 .WithMany()//una empresa puede tener varios usuarios
                 .HasForeignKey(u => u.EmpresaId)// se define la llave foranea , la que conecta todos los usuarios con la empresa
                 .OnDelete(DeleteBehavior.Restrict);//no puedes eliminar una empresa si tiene usuarios asociados 
+
+            builder.Entity<Venta>()
+                .HasMany(v => v.Detalles)
+                .WithOne(d => d.Venta)
+                .HasForeignKey(d => d.VentaId);
         }
     }
 }

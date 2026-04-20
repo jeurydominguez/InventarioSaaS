@@ -26,7 +26,7 @@ namespace InventarioSaaS.API.Controllers
             return Ok();
         }
 
-        [HttpGet("obtener-todos")]
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> ObtenerTodos()
         {

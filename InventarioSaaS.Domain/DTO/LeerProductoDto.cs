@@ -10,7 +10,7 @@ namespace InventarioSaaS.Domain.DTO
 
         public string Nombre { get; set; }
 
-        public float PrecioVenta { get; set; }
+        public decimal PrecioVenta { get; set; }
 
         public int Stock { get; set; }
 

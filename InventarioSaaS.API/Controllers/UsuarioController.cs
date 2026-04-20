@@ -2,6 +2,7 @@
 using InventarioSaaS.Domain.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace InventarioSaaS.API.Controllers
 {
@@ -24,6 +25,7 @@ namespace InventarioSaaS.API.Controllers
         }
 
         [HttpPost("login")]
+        [EndpointSummary("Logeamos")]
         public async Task<ActionResult> Login(LogearUsuarioDto dto)
         {
             var token = await servicio.Login(dto);
@@ -31,9 +33,11 @@ namespace InventarioSaaS.API.Controllers
         }
 
         //no queria hacerlo de esta forma pero es posible que sea la unica a largo plazo , esperemos no rompa nada 
-        [HttpPost("hacer-admin")]
+        [HttpGet()]
         [Authorize(Policy = "admin")]
-        public async Task<IActionResult> HacerAdmin(HacerAdminDto dto)
+        [EndpointSummary("Hacemos a un usuario Admin")]
+        [Description("para usarla tienes que ser admin")]
+        public async Task<IActionResult> HacerAdmin([Description("datos de la cuenta")]HacerAdminDto dto)
         {
             await servicio.HacerAdmin(dto);
             return Ok();

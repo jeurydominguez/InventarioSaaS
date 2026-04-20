@@ -11,7 +11,7 @@ namespace InventarioSaaS.Domain.DTO
         public required string Nombre { get; set; }
 
         [Required]
-        public required float PrecioVenta { get; set; }
+        public required decimal PrecioVenta { get; set; }
 
         [Required]
         public required int Stock { get; set; }
