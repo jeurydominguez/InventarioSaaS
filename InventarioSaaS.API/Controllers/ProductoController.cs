@@ -18,7 +18,7 @@ namespace InventarioSaaS.API.Controllers
             this.service = service;
         }
 
-        [HttpPost("crear")]
+        [HttpPost]
         [Authorize(Policy = "admin")]
         public async Task<IActionResult> Crear(CrearProductoDto dto)
         {

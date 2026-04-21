@@ -135,7 +135,7 @@ namespace InventarioSaaS.Application.service
             foreach(var dto in dtos)
             {
                 productoDict.TryGetValue(dto.Id, out var producto);
-                dto.Total = dto.Cantidad * producto!.Stock;
+                dto.Total = dto.Cantidad * producto!.PrecioVenta;
             }
         }
     }
