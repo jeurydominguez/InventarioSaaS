@@ -5,7 +5,7 @@ using System.Text;
 
 namespace InventarioSaaS.Domain.DTO
 {
-    public class LeerClienteDto
+    public class LeerClienteDtoUnidad
     {
         public int Id { get; set; }
         [Required]

@@ -31,6 +31,7 @@ namespace InventarioSaaS.Application.Mapper
         public static LeerVentaDtoUnidad ALeerVentaUnidadDto(Venta modelo)
         {
             var detalles = Mapper.DetalleVentaMapper.ADetalleVentaDto(modelo.Detalles);
+            var cliente = Mapper.ClienteMapper.ALeerClienteDtoVenta(modelo.cliente);
 
             return new LeerVentaDtoUnidad
             {
@@ -39,6 +40,7 @@ namespace InventarioSaaS.Application.Mapper
                 Total = modelo.Total,
                 TipoPago = modelo.TipoPago,
                 clienteId = modelo.ClienteId,
+                Cliente = cliente,
                 UsuarioId = modelo.UsuarioId,
                 detalle = detalles
             };

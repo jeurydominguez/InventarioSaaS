@@ -15,6 +15,8 @@ namespace InventarioSaaS.Domain.Entidades
         [Phone]
         public string? NumeroTelefono { get; set; }
 
+        public List<Venta> Facturas { get; set; } = [];
+
         public string? Direccion { get; set; }
 
         public int EmpresaId { get; set; }

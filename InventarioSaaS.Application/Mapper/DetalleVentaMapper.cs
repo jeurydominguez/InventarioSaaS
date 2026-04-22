@@ -18,6 +18,7 @@ namespace InventarioSaaS.Application.Mapper
                 {
                     Id = modelo.Id,
                     VentaId = modelo.VentaId,
+                    Nombre = modelo.Nombre,
                     ProductoId = modelo.ProductoId,
                     Cantidad = modelo.Cantidad,
                     PrecioUnitario = modelo.PrecioUnitario,

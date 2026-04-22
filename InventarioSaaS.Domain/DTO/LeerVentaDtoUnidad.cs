@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InventarioSaaS.Domain.Entidades;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,6 +12,7 @@ namespace InventarioSaaS.Domain.DTO
         public decimal Total { get; set; }
         public string TipoPago { get; set; }
         public int? clienteId { get; set; }
+        public LeerClienteDtoVenta Cliente { get; set; }
         public Guid UsuarioId { get; set; }
         public List<LeerDetalleVentaDto> detalle { get; set; }
     }

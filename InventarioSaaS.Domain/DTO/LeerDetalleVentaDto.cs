@@ -8,6 +8,8 @@ namespace InventarioSaaS.Domain.DTO
     {
         public int Id { get; set; }
 
+        public string Nombre { get; set; }
+
         public int VentaId { get; set; }
 
         public int ProductoId { get; set; }

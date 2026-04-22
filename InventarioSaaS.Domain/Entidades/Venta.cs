@@ -21,6 +21,8 @@ namespace InventarioSaaS.Domain.Entidades
 
         public int? ClienteId { get; set; }
 
+        public Cliente? cliente { get; set; }
+
         public Guid UsuarioId { get; set; }
 
         public int EmpresaId { get; set; }

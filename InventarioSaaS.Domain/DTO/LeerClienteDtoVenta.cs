@@ -5,13 +5,11 @@ using System.Text;
 
 namespace InventarioSaaS.Domain.DTO
 {
-    public class LeerClienteDto
+    public class LeerClienteDtoVenta
     {
         public int Id { get; set; }
         [Required]
-        public required string Nombre { get; set; }
-
-        public List<LeerVentasDto> Facturas { get; set; }
+        public string? Nombre { get; set; }
 
         [Phone]
         public string? NumeroTelefono { get; set; }

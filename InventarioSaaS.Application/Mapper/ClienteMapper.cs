@@ -1,5 +1,6 @@
 ﻿using InventarioSaaS.Domain.DTO;
 using InventarioSaaS.Domain.Entidades;
+using Microsoft.IdentityModel.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,13 +20,26 @@ namespace InventarioSaaS.Application.Mapper
             };
         }
 
+        public static LeerClienteDtoVenta ALeerClienteDtoVenta(Cliente Modelo)
+        {
+            return new LeerClienteDtoVenta
+            {
+                Id = Modelo.Id,
+                Nombre = Modelo.Nombre,
+                NumeroTelefono = Modelo.NumeroTelefono,
+                Direccion = Modelo.Direccion
+            };
+        }
+
         public static LeerClienteDto ALeerDto(Cliente modelo)
         {
+            var facturas = Mapper.VentasMapper.ALeerVentasDto(modelo.Facturas);
             return new LeerClienteDto
             {
                 Id = modelo.Id,
                 Nombre = modelo.Nombre,
                 NumeroTelefono = modelo.NumeroTelefono,
+                Facturas = facturas,
                 Direccion = modelo.Direccion
             };
         }

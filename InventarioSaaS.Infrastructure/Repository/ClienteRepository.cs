@@ -28,7 +28,7 @@ namespace InventarioSaaS.Infrastructure.Repository
 
         public async Task<Cliente> ObtenerPorId(int empresaId, int id)
         {
-            var cliente = await dbcontext.Cliente.Where(e => e.EmpresaId == empresaId && e.Id == id).FirstOrDefaultAsync();
+            var cliente = await dbcontext.Cliente.Include(c=>c.Facturas).Where(e => e.EmpresaId == empresaId && e.Id == id).FirstOrDefaultAsync();
             return cliente;
         }
 

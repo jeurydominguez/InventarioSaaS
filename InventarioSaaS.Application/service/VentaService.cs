@@ -107,6 +107,7 @@ namespace InventarioSaaS.Application.service
                 DetalleVenta detalle = new DetalleVenta
                 {
                     VentaId = venta.Id,
+                    Nombre = producto.Nombre,
                     ProductoId = dto.Id,
                     Cantidad = dto.Cantidad,
                     PrecioUnitario = producto!.PrecioVenta,

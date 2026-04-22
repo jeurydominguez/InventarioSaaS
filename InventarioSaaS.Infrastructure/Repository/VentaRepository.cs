@@ -72,7 +72,11 @@ namespace InventarioSaaS.Infrastructure.Repository
 
         public async Task<Venta> Obtener(int id, int empresaId)
         {
-            var venta = await appDbcontext.Venta.Include(x => x.Detalles).Where(v => v.EmpresaId == empresaId && v.Id == id).FirstOrDefaultAsync();
+            var venta = await appDbcontext.Venta
+                .Include(x => x.Detalles)
+                .Include(x=> x.cliente)
+                .Where(v => v.EmpresaId == empresaId && v.Id == id)
+                .FirstOrDefaultAsync();
             return venta;
         }
     }
