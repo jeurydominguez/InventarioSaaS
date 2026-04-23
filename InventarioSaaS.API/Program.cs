@@ -20,7 +20,6 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 //Area de servicios
 
 builder.Services.AddControllers().AddNewtonsoftJson();
-builder.Services.AddOpenApi();
 
 //configuracion del db context
 builder.Services.AddDbContext<AppDbcontext>(option => option.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnections")));

@@ -10,7 +10,7 @@ namespace InventarioSaaS.Domain.DTO
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
         public decimal Total { get; set; }
-        public string TipoPago { get; set; }
+        public TipoPago TipoPago { get; set; }
         public int? clienteId { get; set; }
         public LeerClienteDtoVenta Cliente { get; set; }
         public Guid UsuarioId { get; set; }

@@ -8,8 +8,8 @@ namespace InventarioSaaS.Domain.Entidades
     {
         public enum EstadoVenta
         {
-            Contado,
-            credito
+            Contado = 0,
+            credito = 1
         }
     }
 }
