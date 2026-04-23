@@ -13,7 +13,7 @@ namespace InventarioSaaS.Domain.DTO
         public required List<ProductoParaVentaDto> Productos { get; set; } = [];
 
         [Required]
-        public required string TipoPago { get; set; }
+        public required TipoPago TipoPago { get; set; }
 
         public int? ClienteId { get; set; }
     }
