@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -20,5 +21,8 @@ namespace InventarioSaaS.Domain.Entidades
 
         public int EmpresaId { get; set; }
         public int CategoriaId { get; set; }
+
+        [Unicode(false)]
+        public string? Foto { get; set; }
     }
 }

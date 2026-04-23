@@ -14,6 +14,8 @@ using Microsoft.OpenApi;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+
 
 //Area de servicios
 
@@ -74,6 +76,8 @@ app.UseMiddleware<MiddlewareEx>();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.Urls.Add($"http://*:{port}");
 
 app.UseHttpsRedirection();
 
