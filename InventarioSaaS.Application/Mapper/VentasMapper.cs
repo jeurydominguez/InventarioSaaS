@@ -27,6 +27,17 @@ namespace InventarioSaaS.Application.Mapper
             }
             return dtos;
         }
+        public static LeerVentasDto AleerVentaDtoCuenta(Venta modelo)
+        {
+            return new LeerVentasDto
+            {
+                Id = modelo.Id,
+                Fecha = modelo.Fecha,
+                Total = modelo.Total,
+                TipoPago = modelo.TipoPago,
+                clienteId = modelo.ClienteId
+            };
+        }
 
         public static LeerVentaDtoUnidad ALeerVentaUnidadDto(Venta modelo)
         {

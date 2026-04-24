@@ -17,9 +17,11 @@ namespace InventarioSaaS.Domain.Entidades
         public List<DetalleVenta> Detalles { get; set; } = new();
 
         [Required]
-        public required TipoPago TipoPago { get; set; }
+        public required TipoPago.EstadoVenta TipoPago { get; set; }
 
         public int? ClienteId { get; set; }
+        public int? CuentaporCobrarId { get; set; }
+        public CuentasPorCobrar? CuentaPorCobrar { get; set; }
 
         public Cliente? cliente { get; set; }
 

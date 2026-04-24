@@ -79,5 +79,11 @@ namespace InventarioSaaS.Infrastructure.Repository
                 .FirstOrDefaultAsync();
             return venta;
         }
+
+        public async Task CrearCuentaPorCobrar(CuentasPorCobrar cuenta)
+        {
+            appDbcontext.CuentasPorCobrar.Add(cuenta);
+            await appDbcontext.SaveChangesAsync();
+        }
     }
 }

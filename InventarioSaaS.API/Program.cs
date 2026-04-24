@@ -36,6 +36,8 @@ builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 builder.Services.AddScoped<IVentaService, VentaService>();
+builder.Services.AddScoped<CuentasPorCobrarIRepository, CuentasPorCobrarRepository>();
+builder.Services.AddScoped<ICuentasPorCobrarService, CuentasPorCobrarService>();
 
 //configuracion del JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -69,6 +71,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+if (app.Environment.IsProduction())
+{
+    app.Urls.Add($"http://*:{port}");
+}
 
 app.UseMiddleware<MiddlewareEx>();
 
@@ -76,11 +82,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.Urls.Add($"http://*:{port}");
-
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

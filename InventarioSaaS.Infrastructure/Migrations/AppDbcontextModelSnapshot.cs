@@ -17,7 +17,7 @@ namespace InventarioSaaS.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.4")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -46,6 +46,45 @@ namespace InventarioSaaS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cliente");
+                });
+
+            modelBuilder.Entity("InventarioSaaS.Domain.Entidades.CuentasPorCobrar", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ClienteId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EmpresaId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Estado")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("MontoPendiente")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("MontoTotal")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("VentaId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("VentaId")
+                        .IsUnique();
+
+                    b.ToTable("CuentasPorCobrar");
                 });
 
             modelBuilder.Entity("InventarioSaaS.Domain.Entidades.DetalleVenta", b =>
@@ -123,6 +162,10 @@ namespace InventarioSaaS.Infrastructure.Migrations
 
                     b.Property<int>("EmpresaId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Foto")
+                        .IsUnicode(false)
+                        .HasColumnType("text");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -227,15 +270,17 @@ namespace InventarioSaaS.Infrastructure.Migrations
                     b.Property<int?>("ClienteId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("CuentaporCobrarId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("EmpresaId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("TipoPago")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("TipoPago")
+                        .HasColumnType("integer");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("numeric");
@@ -382,6 +427,23 @@ namespace InventarioSaaS.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("InventarioSaaS.Domain.Entidades.CuentasPorCobrar", b =>
+                {
+                    b.HasOne("InventarioSaaS.Domain.Entidades.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId");
+
+                    b.HasOne("InventarioSaaS.Domain.Entidades.Venta", "Venta")
+                        .WithOne("CuentaPorCobrar")
+                        .HasForeignKey("InventarioSaaS.Domain.Entidades.CuentasPorCobrar", "VentaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Venta");
+                });
+
             modelBuilder.Entity("InventarioSaaS.Domain.Entidades.DetalleVenta", b =>
                 {
                     b.HasOne("InventarioSaaS.Domain.Entidades.Venta", "Venta")
@@ -471,6 +533,8 @@ namespace InventarioSaaS.Infrastructure.Migrations
 
             modelBuilder.Entity("InventarioSaaS.Domain.Entidades.Venta", b =>
                 {
+                    b.Navigation("CuentaPorCobrar");
+
                     b.Navigation("Detalles");
                 });
 #pragma warning restore 612, 618

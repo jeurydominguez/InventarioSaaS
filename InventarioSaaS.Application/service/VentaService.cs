@@ -46,7 +46,10 @@ namespace InventarioSaaS.Application.service
             await repository.CrearVenta(venta);
             await CrearDetalle(venta, productos, dto.Productos);
             await DescontarStock(productos, dto.Productos);
-
+            if (venta.TipoPago == TipoPago.EstadoVenta.credito)
+            {
+                await CrearCuentaPorCobrar(venta);
+            }
         }
 
         public async Task<List<LeerVentasDto>> ObtenerVentas()
@@ -58,6 +61,7 @@ namespace InventarioSaaS.Application.service
             var dtos = Mapper.VentasMapper.ALeerVentasDto(ventas);
             return dtos;
         }
+
 
         public async Task<LeerVentaDtoUnidad> Obtener(int id)
         {
@@ -138,6 +142,22 @@ namespace InventarioSaaS.Application.service
                 productoDict.TryGetValue(dto.Id, out var producto);
                 dto.Total = dto.Cantidad * producto!.PrecioVenta;
             }
+        }
+
+        public async Task CrearCuentaPorCobrar(Venta venta)
+        {
+            var fecha = DateTime.UtcNow;
+            var cuenta = new CuentasPorCobrar
+            {
+                VentaId = venta.Id,
+                ClienteId = venta.ClienteId,
+                MontoTotal = venta.Total,
+                MontoPendiente = venta.Total,
+                Estado = TipoPago.Estado.Pendiente,
+                FechaCreacion = fecha,
+                EmpresaId = venta.EmpresaId
+            };
+            await repository.CrearCuentaPorCobrar(cuenta);
         }
     }
 }

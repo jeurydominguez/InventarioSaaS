@@ -11,5 +11,11 @@ namespace InventarioSaaS.Domain.Entidades
             Contado = 0,
             credito = 1
         }
+
+        public enum Estado
+        {
+            Pendiente = 0,
+            Pagado = 1
+        }
     }
 }

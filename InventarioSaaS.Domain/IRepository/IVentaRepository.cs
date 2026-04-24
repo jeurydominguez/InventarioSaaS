@@ -17,5 +17,6 @@ namespace InventarioSaaS.Domain.IRepository
         Task ActualizarStock(Dictionary<int, Producto> produtos);
         Task<List<Venta>> GetAll(int empresaId);
         Task<Venta> Obtener(int id, int empresaId);
+        Task CrearCuentaPorCobrar(CuentasPorCobrar cuenta);
     }
 }

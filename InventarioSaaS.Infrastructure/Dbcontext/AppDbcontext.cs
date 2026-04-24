@@ -19,6 +19,7 @@ namespace InventarioSaaS.Infrastructure.ApplicationDbContext
         public DbSet<Cliente> Cliente { get; set; }
         public DbSet<Venta> Venta { get; set; }
         public DbSet<DetalleVenta> Detalle { get; set; }
+        public DbSet<CuentasPorCobrar> CuentasPorCobrar { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -41,6 +42,15 @@ namespace InventarioSaaS.Infrastructure.ApplicationDbContext
                 .WithMany(c=> c.Facturas)
                 .HasForeignKey(v => v.ClienteId);
 
+            builder.Entity<CuentasPorCobrar>()
+                .HasOne(v => v.Venta)
+                .WithOne(c => c.CuentaPorCobrar)
+                .HasForeignKey<CuentasPorCobrar>(c => c.VentaId);
+
+            builder.Entity<CuentasPorCobrar>()
+                .HasOne(c => c.Cliente)
+                .WithMany(e => e.Deudas)
+                .HasForeignKey(c => c.ClienteId);
         }
     }
 }

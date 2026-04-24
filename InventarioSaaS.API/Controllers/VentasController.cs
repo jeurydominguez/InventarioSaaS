@@ -1,4 +1,5 @@
 ﻿using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,10 @@ namespace InventarioSaaS.API.Controllers
         [Authorize]
         public async Task<IActionResult> CrearVenta(CrearVentaDto dto)
         {
+            if(dto.TipoPago == TipoPago.EstadoVenta.credito && dto.ClienteId is null)
+            {
+                return BadRequest("Es necesario el cliente para aplicar credito");
+            }
             await service.CrearVenta(dto);
             return Ok();
         }

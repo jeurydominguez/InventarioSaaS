@@ -17,6 +17,8 @@ namespace InventarioSaaS.Domain.Entidades
 
         public List<Venta> Facturas { get; set; } = [];
 
+        public List<CuentasPorCobrar> Deudas { get; set; } = [];
+
         public string? Direccion { get; set; }
 
         public int EmpresaId { get; set; }
