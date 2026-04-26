@@ -38,14 +38,16 @@ namespace InventarioSaaS.Application.Mapper
             return productosDtos;
         }
 
-        public static LeerProductoDto ALeerProductoDto(Producto producto)
+        public static LeerProductoDtoUnidad ALeerProductoDto(Producto producto)
         {
-            return new LeerProductoDto
+            var categoria = Mapper.CategoriaMapper.ACategoriaDto(producto.Categoria);
+            return new LeerProductoDtoUnidad
             {
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 PrecioVenta = producto.PrecioVenta,
-                Stock = producto.Stock
+                Stock = producto.Stock,
+                Categoria = categoria
             };
         }
 

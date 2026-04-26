@@ -90,7 +90,7 @@ namespace InventarioSaaS.Application.service
             await repository.Editar(producto);
         }
 
-        public async Task<LeerProductoDto> BuscarProductoPorId(int id)
+        public async Task<LeerProductoDtoUnidad> BuscarProductoPorId(int id)
         {
             var empresaId = await repository.BuscarClaimEmpresaID();
             if (empresaId == null)
@@ -125,7 +125,6 @@ namespace InventarioSaaS.Application.service
                 throw new NoContentEx("Producto no encontrado");
             }
             await repository.Eliminar(producto);
-
         }
     }
 }

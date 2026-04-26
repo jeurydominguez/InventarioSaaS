@@ -13,7 +13,7 @@ namespace InventarioSaaS.Domain.IService
         Task<List<LeerProductoDto>> BuscarTodos();
         Task<EditarProductoDto> Editar(int id);
         Task Actualizar(EditarProductoDto dto);
-        Task<LeerProductoDto> BuscarProductoPorId(int id);
+        Task<LeerProductoDtoUnidad> BuscarProductoPorId(int id);
         Task Eliminar(int id);
     }
 }
