@@ -21,7 +21,7 @@ namespace InventarioSaaS.Domain.Entidades
 
         public int EmpresaId { get; set; }
         public int CategoriaId { get; set; }
-
+        public Categoria Categoria { get; set; }
         [Unicode(false)]
         public string? Foto { get; set; }
     }

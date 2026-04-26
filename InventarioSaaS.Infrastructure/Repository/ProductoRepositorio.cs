@@ -40,8 +40,9 @@ namespace InventarioSaaS.Infrastructure.Repository
 
         public async Task<Producto> BuscarProducto(int empresaId, int productoId)
         {
-            var productoDb = await dbcontext.Producto.Where(e => e.EmpresaId == empresaId && e.Id == productoId).FirstOrDefaultAsync();
+            var productoDb = await dbcontext.Producto.Include(c=> c.Categoria).Where(e => e.EmpresaId == empresaId && e.Id == productoId).FirstOrDefaultAsync();
             return productoDb;
+            //modelar todo el proceso de producto con la propiedad de categoria 
         }
 
         public async Task Editar(Producto producto)

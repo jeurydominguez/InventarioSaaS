@@ -16,7 +16,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 var builder = WebApplication.CreateBuilder(args);
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 
-
 //Area de servicios
 
 builder.Services.AddControllers().AddNewtonsoftJson();
