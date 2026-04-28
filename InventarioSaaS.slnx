@@ -3,4 +3,5 @@
   <Project Path="InventarioSaaS.Application/InventarioSaaS.Application.csproj" />
   <Project Path="InventarioSaaS.Domain/InventarioSaaS.Domain.csproj" />
   <Project Path="InventarioSaaS.Infrastructure/InventarioSaaS.Infrastructure.csproj" />
+  <Project Path="SaasTest/SaasTest.csproj" Id="03e05aac-9706-42a0-83f0-c365a6c7f033" />
 </Solution>

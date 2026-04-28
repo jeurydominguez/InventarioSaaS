@@ -25,8 +25,12 @@ namespace InventarioSaaS.Application.service
         public async Task Crear(CrearProductoDto dto)
         {
             var empresa = await repository.BuscarClaimEmpresaID();
+            if(empresa == null)
+            {
+                throw new NoContentEx("Credenciales invalidas");
+            }
 
-            var product = Mapper.ProductoMapper.AModelo(dto, int.Parse(empresa));
+            var product = Mapper.ProductoMapper.AModelo(dto, empresa);
             if(product == null)
             {
                 throw new NotFoundEx("El Producto no se pudo crear correctamente");
@@ -42,9 +46,8 @@ namespace InventarioSaaS.Application.service
             {
                 throw new NotFoundEx("No se pudo obtener el id de la empresa");
             }
-            int id = int.Parse(empresaId);
 
-            var productos = await repository.BuscarTodos(id);
+            var productos = await repository.BuscarTodos(empresaId);
             if( productos.Count == 0)
             {
                 throw new NoContentEx("no tienes productos creados");
@@ -61,10 +64,9 @@ namespace InventarioSaaS.Application.service
             {
                 throw new NotFoundEx("No se pudo obtener el id de la empresa");
             }
-            int idEmpresa = int.Parse(empresaId);
 
-            var productoEncontrado = await repository.BuscarProducto(idEmpresa, id); //se busca el producto la primera vez por que necesito saber si el producto existe en el contexto actual
-            if (productoEncontrado == null && productoEncontrado.EmpresaId != idEmpresa)
+            var productoEncontrado = await repository.BuscarProducto(empresaId, id); //se busca el producto la primera vez por que necesito saber si el producto existe en el contexto actual
+            if (productoEncontrado == null || productoEncontrado.EmpresaId != empresaId)
             {
                 throw new NoContentEx("Producto no encontrado");
             }
@@ -97,10 +99,9 @@ namespace InventarioSaaS.Application.service
             {
                 throw new NotFoundEx("No se pudo obtener el id de la empresa");
             }
-            int IdEmpresa = int.Parse(empresaId);
 
-            var producto = await repository.BuscarProducto(IdEmpresa, id);
-            if(producto == null && producto.EmpresaId != IdEmpresa)
+            var producto = await repository.BuscarProducto(empresaId, id);
+            if(producto == null || producto.EmpresaId != empresaId)
             {
                 throw new NoContentEx("Producto no encontrado");
             }
@@ -117,10 +118,9 @@ namespace InventarioSaaS.Application.service
             {
                 throw new NoContentEx("Credenciales Incorrectas");
             }
-            int idEmpresa = int.Parse(empresaId);
 
-            var producto = await repository.BuscarProducto(idEmpresa, id);
-            if(producto == null && producto.EmpresaId != idEmpresa)
+            var producto = await repository.BuscarProducto(empresaId, id);
+            if(producto == null && producto!.EmpresaId != empresaId)
             {
                 throw new NoContentEx("Producto no encontrado");
             }

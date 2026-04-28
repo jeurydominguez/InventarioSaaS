@@ -19,7 +19,7 @@ namespace InventarioSaaS.Domain.Entidades
         [Required]
         public required int Stock { get; set; }
 
-        public int EmpresaId { get; set; }
+        public int? EmpresaId { get; set; }
         public int CategoriaId { get; set; }
         public Categoria Categoria { get; set; }
         [Unicode(false)]

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq.EntityFrameworkCore" Version="8.0.0.1" />
+    <PackageReference Include="MSTest" Version="4.0.2" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InventarioSaaS.API\InventarioSaaS.API.csproj" />
+    <ProjectReference Include="..\InventarioSaaS.Application\InventarioSaaS.Application.csproj" />
+    <ProjectReference Include="..\InventarioSaaS.Domain\InventarioSaaS.Domain.csproj" />
+    <ProjectReference Include="..\InventarioSaaS.Infrastructure\InventarioSaaS.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+  </ItemGroup>
+
+</Project>

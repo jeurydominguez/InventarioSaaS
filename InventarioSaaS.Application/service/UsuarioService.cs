@@ -128,6 +128,13 @@ namespace InventarioSaaS.Application.service
         public async Task HacerAdmin(HacerAdminDto dto)
         {
             var usuario = await repository.BuscarUsuario(dto.Email);
+            var claims = await repository.ObtenerCLaims(usuario);
+            var exist = claims.Any(c => c.Type == "rol" && c.Type == "admin");
+            if (exist)
+            {
+                throw new NotFoundEx("el usuario ya es admin");
+            }
+
             await repository.HacerAdmin(usuario);
         }
     }
