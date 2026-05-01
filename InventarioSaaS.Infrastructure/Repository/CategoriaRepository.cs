@@ -1,4 +1,5 @@
-﻿using InventarioSaaS.Domain.Entidades;
+﻿using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Infrastructure.ApplicationDbContext;
 using Microsoft.AspNetCore.Http;
@@ -22,10 +23,11 @@ namespace InventarioSaaS.Infrastructure.Repository
             this.httpContext = httpContext;
         }
 
-        public async Task<string> BuscarEmpresa()
+        public async Task<int> BuscarEmpresa()
         {
             var empresa = httpContext.HttpContext!.User.Claims.Where(e => e.Type == "EmpresaId").FirstOrDefault().Value;
-            return empresa;
+            int empresaId = int.Parse(empresa);
+            return empresaId;
         }
 
         public async Task<Categoria> ObtenerPorId(int id, int empresaId)
@@ -46,9 +48,16 @@ namespace InventarioSaaS.Infrastructure.Repository
             await context.SaveChangesAsync();
         }
 
-        public async Task Eliminar(int id)
+        public async Task Eliminar(Categoria modelo)
         {
+            context.Categoria.Remove(modelo);
+            await context.SaveChangesAsync();
+        }
 
+        public async Task<Categoria>Buscar(int empresaId, CategoriaDto dto)
+        {
+            var categoria = await context.Categoria.Where(c => c.EmpresaId == empresaId && c.Nombre == dto.Nombre && c.Descripcion == dto.Descripcion).FirstOrDefaultAsync();
+            return categoria;
         }
     }
 }

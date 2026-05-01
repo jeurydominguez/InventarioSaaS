@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace InventarioSaaS.Application.service
 {
@@ -78,15 +79,21 @@ namespace InventarioSaaS.Application.service
         public async Task Actualizar(EditarProductoDto dto)
         {
             var producto = await repository.BuscarProducto(dto.EmpresaId, dto.Id);//se busca una segunda vez para tener el producto original de la base de datos 
-            if(producto == null && producto.EmpresaId != dto.EmpresaId)
+            if(producto == null || producto.EmpresaId != dto.EmpresaId)
             {
                 throw new NoContentEx("Producto no encontrado");
+            }
+            var categoria = await repository.BuscarCategoria(dto.EmpresaId, dto.CategoriaId);
+            if(categoria == null || categoria.EmpresaId != dto.EmpresaId)
+            {
+                throw new NoContentEx("Categoria no encontrada");
             }
 
             //se aplican los cambios que recibo del dto ya parcheado desde el controller
             producto.Nombre = dto.Nombre;
             producto.PrecioVenta = dto.PrecioVenta;
             producto.Stock = dto.Stock;
+            producto.CategoriaId = dto.CategoriaId;
 
             //aqui termina todo , es complicado por cuestiones de logica pero funciona 10/10
             await repository.Editar(producto);

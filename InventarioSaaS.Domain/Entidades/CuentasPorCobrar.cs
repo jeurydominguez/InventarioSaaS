@@ -25,5 +25,7 @@ namespace InventarioSaaS.Domain.Entidades
         public DateTime FechaCreacion { get; set; }
 
         public int EmpresaId { get; set; }
+
+        public List<Pago> Pagos { get; set; } = [];
     }
 }

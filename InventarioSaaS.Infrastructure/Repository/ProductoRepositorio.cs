@@ -57,5 +57,11 @@ namespace InventarioSaaS.Infrastructure.Repository
             dbcontext.Producto.Remove(modelo);
             await dbcontext.SaveChangesAsync();
         }
+
+        public async Task<Categoria> BuscarCategoria(int? empresaId, int id)
+        {
+            var categoria = await dbcontext.Categoria.Where(c => c.EmpresaId == empresaId && c.Id == id).FirstOrDefaultAsync();
+            return categoria;
+        }
     }
 }

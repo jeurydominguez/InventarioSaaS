@@ -19,6 +19,7 @@ namespace InventarioSaaS.Domain.DTO
         public decimal MontoPendiente { get; set; }
 
         public TipoPago.Estado Estado { get; set; }
+        public List<LeerPagoDto> Pagos { get; set; } = [];
 
         public DateTime FechaCreacion { get; set; }
     }

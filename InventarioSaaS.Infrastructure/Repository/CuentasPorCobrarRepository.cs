@@ -37,7 +37,10 @@ namespace InventarioSaaS.Infrastructure.Repository
 
         public async Task<CuentasPorCobrar> ObtenerUno(int empresaId, int id)
         {
-            var cuenta = await dbcontext.CuentasPorCobrar.Include(v=> v.Venta).Include(c=> c.Cliente).Where(c => c.EmpresaId == empresaId && c.Id == id).FirstOrDefaultAsync();
+            var cuenta = await dbcontext.CuentasPorCobrar.Include(c=>c.Pagos).Include(v => v.Venta)
+                .Include(c => c.Cliente)
+                .Where(c => c.EmpresaId == empresaId && c.Id == id)
+                .FirstOrDefaultAsync();
             return cuenta;
         }
     }

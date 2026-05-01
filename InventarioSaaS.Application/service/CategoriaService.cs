@@ -21,7 +21,16 @@ namespace InventarioSaaS.Application.service
         public async Task Crear(CategoriaDto dto)
         {
             var empresa = await repository.BuscarEmpresa();
-            int empresaId = int.Parse(empresa);
+            if (empresa == null)
+            {
+                throw new NoContentEx("empresa invalida");
+            }
+
+            var existe = await repository.Buscar(empresa, dto);
+            if(existe != null)
+            {
+                throw new NotFoundEx($"Esta categoria existe con el Id {existe.Id}");
+            }
             var categoria = Mapper.CategoriaMapper.AModelo(dto);
 
             await repository.Crear(categoria);
@@ -30,9 +39,8 @@ namespace InventarioSaaS.Application.service
         public async Task<CategoriaDto>ObtenerPorId(int Id)
         {
             var empresa = await repository.BuscarEmpresa();
-            int empresaId = int.Parse(empresa);
 
-            var categoria = await repository.ObtenerPorId(Id, empresaId);
+            var categoria = await repository.ObtenerPorId(Id, empresa);
             if (categoria == null)
             {
                 throw new NoContentEx("Categoria no encontrada");
@@ -45,9 +53,8 @@ namespace InventarioSaaS.Application.service
         public async Task<List<LeerCategoriaDto>> Get()
         {
             var empresa = await repository.BuscarEmpresa();
-            int empresaId = int.Parse(empresa);
 
-            var categoria = await repository.Get(empresaId);
+            var categoria = await repository.Get(empresa);
             if(categoria == null)
             {
                 throw new NoContentEx("Categorias no encontradas");
@@ -58,7 +65,17 @@ namespace InventarioSaaS.Application.service
 
         public async Task Eliminar(int id)
         {
-
+            var empresa = await repository.BuscarEmpresa();
+            if (empresa == null)
+            {
+                throw new NoContentEx("empresa invalida");
+            }
+            var categoria = await repository.ObtenerPorId(id, empresa);
+            if (categoria == null)
+            {
+                throw new NoContentEx("Categoria No encontrada");
+            }
+            await repository.Eliminar(categoria);
         }
     }
 }

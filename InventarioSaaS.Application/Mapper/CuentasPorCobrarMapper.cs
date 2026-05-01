@@ -35,6 +35,7 @@ namespace InventarioSaaS.Application.Mapper
         {
             var venta = Mapper.VentasMapper.AleerVentaDtoCuenta(modelo.Venta);
             var cliente = Mapper.ClienteMapper.ALeerClienteDtoVenta(modelo.Cliente);
+            var pagos = Mapper.PagoMapper.ALeerPagoDto(modelo.Pagos);
             return new LeerCuentaPorCobrarUnidadDto
             {
                 Id = modelo.Id,
@@ -43,7 +44,8 @@ namespace InventarioSaaS.Application.Mapper
                 MontoTotal = modelo.MontoTotal,
                 MontoPendiente = modelo.MontoPendiente,
                 Estado = modelo.Estado,
-                FechaCreacion = modelo.FechaCreacion
+                FechaCreacion = modelo.FechaCreacion,
+                Pagos = pagos
             };
         }
     }
