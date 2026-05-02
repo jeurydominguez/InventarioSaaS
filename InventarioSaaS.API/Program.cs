@@ -39,6 +39,8 @@ builder.Services.AddScoped<CuentasPorCobrarIRepository, CuentasPorCobrarReposito
 builder.Services.AddScoped<ICuentasPorCobrarService, CuentasPorCobrarService>();
 builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 builder.Services.AddScoped<IPagoService, PagoService>();
+builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 
 //configuracion del JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");

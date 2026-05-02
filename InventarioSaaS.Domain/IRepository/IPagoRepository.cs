@@ -10,8 +10,8 @@ namespace InventarioSaaS.Domain.IRepository
     public interface IPagoRepository
     {
         Task<int> ObtenerEmpresaId();
-        Task<List<Pago>> GetAll(int? empresaId);
-        Task<Pago> ObtenerPorId(int? empresaId, int id);
+        Task<List<Pago>> GetAll(int empresaId);
+        Task<Pago> ObtenerPorId(int empresaId, int id);
         Task<CuentasPorCobrar> ObtenerCuentaPorCobrar(int empresaId, int cuentaId);
         Task GuardarPago(Pago pago, CuentasPorCobrar cuenta);
     }

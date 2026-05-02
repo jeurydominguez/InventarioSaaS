@@ -73,7 +73,7 @@ namespace InventarioSaaS.Application.service
             {
                 throw new NotFoundEx("El monto no es valido");
             }
-            cuenta.MontoPendiente =- dto.Monto;
+            cuenta.MontoPendiente = cuenta.MontoPendiente - dto.Monto;
             if (cuenta.MontoPendiente == 0)
             {
                 cuenta.Estado = TipoPago.Estado.Pagado;

@@ -187,7 +187,7 @@ namespace InventarioSaaS.Infrastructure.Migrations
                     b.Property<int>("CuentasPorCobrarId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("EmpresaId")
+                    b.Property<int>("EmpresaId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Fecha")
@@ -214,7 +214,7 @@ namespace InventarioSaaS.Infrastructure.Migrations
                     b.Property<int>("CategoriaId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("EmpresaId")
+                    b.Property<int>("EmpresaId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Foto")

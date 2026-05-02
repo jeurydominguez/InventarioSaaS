@@ -12,6 +12,5 @@ namespace InventarioSaaS.Domain.IService
         Task<List<LeerPagoDto>> GetAll();
         Task<LeerPagoDtoUnidad> Get(int id);
         Task CrearPago(CrearPagoDto dto);
-
     }
 }

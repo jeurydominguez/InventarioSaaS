@@ -25,7 +25,7 @@ namespace InventarioSaaS.Infrastructure.Repository
 
         public async Task<int> BuscarEmpresa()
         {
-            var empresa = httpContext.HttpContext!.User.Claims.Where(e => e.Type == "EmpresaId").FirstOrDefault().Value;
+            var empresa = httpContext.HttpContext.User.Claims.Where(i => i.Type == "EmpresaId").FirstOrDefault().Value;
             int empresaId = int.Parse(empresa);
             return empresaId;
         }

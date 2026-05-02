@@ -9,11 +9,11 @@ namespace InventarioSaaS.Domain.IRepository
     public interface IProductoRepository
     {
         Task Crear(Producto producto);
-        Task<int?> BuscarClaimEmpresaID();
-        Task<List<Producto>> BuscarTodos(int? empresaId);
-        Task<Producto> BuscarProducto(int? empresaId, int productoId);
+        Task<int> BuscarClaimEmpresaID();
+        Task<List<Producto>> BuscarTodos(int empresaId);
+        Task<Producto> BuscarProducto(int empresaId, int productoId);
         Task Editar(Producto producto);
         Task Eliminar(Producto modelo);
-        Task<Categoria> BuscarCategoria(int? empresaId, int id);
+        Task<Categoria> BuscarCategoria(int empresaId, int id);
     }
 }

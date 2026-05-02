@@ -1,6 +1,7 @@
 ﻿using InventarioSaaS.Application.EX;
 using InventarioSaaS.Domain.DTO;
 using InventarioSaaS.Domain.IRepository;
+using InventarioSaaS.Domain.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace InventarioSaaS.Application.service
 {
-    public class CategoriaService
+    public class CategoriaService : ICategoriaService
     {
         private readonly ICategoriaRepository repository;
 
@@ -31,7 +32,7 @@ namespace InventarioSaaS.Application.service
             {
                 throw new NotFoundEx($"Esta categoria existe con el Id {existe.Id}");
             }
-            var categoria = Mapper.CategoriaMapper.AModelo(dto);
+            var categoria = Mapper.CategoriaMapper.AModelo(dto, empresa);
 
             await repository.Crear(categoria);
         }

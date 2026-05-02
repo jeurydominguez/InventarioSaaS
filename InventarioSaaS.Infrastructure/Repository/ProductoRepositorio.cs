@@ -26,20 +26,20 @@ namespace InventarioSaaS.Infrastructure.Repository
             await dbcontext.SaveChangesAsync();
         }
 
-        public async Task<int?> BuscarClaimEmpresaID()
+        public async Task<int> BuscarClaimEmpresaID()
         {
             var claim = httpContext.HttpContext.User.Claims.Where(i => i.Type == "EmpresaId").FirstOrDefault().Value;
-            int? empresa = int.Parse(claim);
+            int empresa = int.Parse(claim);
             return empresa;
         }
 
-        public async Task<List<Producto>> BuscarTodos(int? empresaId)
+        public async Task<List<Producto>> BuscarTodos(int empresaId)
         {
             var productos = await dbcontext.Producto.Where(e => e.EmpresaId == empresaId).ToListAsync();
             return productos;
         }
 
-        public async Task<Producto> BuscarProducto(int? empresaId, int productoId)
+        public async Task<Producto> BuscarProducto(int empresaId, int productoId)
         {
             var productoDb = await dbcontext.Producto.Include(c=> c.Categoria).Where(e => e.EmpresaId == empresaId && e.Id == productoId).FirstOrDefaultAsync();
             return productoDb;
@@ -58,7 +58,7 @@ namespace InventarioSaaS.Infrastructure.Repository
             await dbcontext.SaveChangesAsync();
         }
 
-        public async Task<Categoria> BuscarCategoria(int? empresaId, int id)
+        public async Task<Categoria> BuscarCategoria(int empresaId, int id)
         {
             var categoria = await dbcontext.Categoria.Where(c => c.EmpresaId == empresaId && c.Id == id).FirstOrDefaultAsync();
             return categoria;

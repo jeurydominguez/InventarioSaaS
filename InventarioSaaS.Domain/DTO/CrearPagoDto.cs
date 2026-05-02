@@ -17,6 +17,6 @@ namespace InventarioSaaS.Domain.DTO
         [Required]
         public required decimal Monto { get; set; }
 
-        public int? EmpresaId { get; set; }
+        public int EmpresaId { get; set; }
     }
 }

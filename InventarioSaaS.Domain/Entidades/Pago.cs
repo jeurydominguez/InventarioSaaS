@@ -15,6 +15,6 @@ namespace InventarioSaaS.Domain.Entidades
         public required int CuentasPorCobrarId { get; set; }
         public decimal Monto { get; set; }
         public DateTime Fecha { get; set; }
-        public int? EmpresaId { get; set; }
+        public int EmpresaId { get; set; }
     }
 }

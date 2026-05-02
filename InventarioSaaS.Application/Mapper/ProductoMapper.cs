@@ -8,14 +8,15 @@ namespace InventarioSaaS.Application.Mapper
 {
     public class ProductoMapper
     {
-        public static Producto AModelo(CrearProductoDto dto, int? empresa)
+        public static Producto AModelo(CrearProductoDto dto, int empresa)
         {
             return new Producto
             {
                 Nombre = dto.Nombre,
                 PrecioVenta = dto.PrecioVenta,
                 Stock = dto.Stock,
-                EmpresaId = empresa
+                EmpresaId = empresa,
+                CategoriaId = dto.CategoriaId
             };
         }
 

@@ -20,7 +20,7 @@ namespace InventarioSaaS.API.Controllers
         [Authorize]
         public async Task<IActionResult> CrearVenta(CrearVentaDto dto)
         {
-            if(dto.TipoPago == TipoPago.EstadoVenta.credito && dto.ClienteId is null)
+            if(dto.TipoPago == TipoPago.EstadoVenta.credito && dto.ClienteId == null)
             {
                 return BadRequest("Es necesario el cliente para aplicar credito");
             }

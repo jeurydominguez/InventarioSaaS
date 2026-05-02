@@ -20,7 +20,7 @@ namespace InventarioSaaS.API.Controllers
         public async Task<IActionResult>Post(CategoriaDto dto)
         {
             await service.Crear(dto);
-            return Created();
+            return Ok();
         }
 
         [HttpGet]

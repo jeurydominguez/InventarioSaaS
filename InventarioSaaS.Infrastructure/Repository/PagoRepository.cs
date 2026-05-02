@@ -28,13 +28,13 @@ namespace InventarioSaaS.Infrastructure.Repository
             return empresaId;
         }
 
-        public async Task<List<Pago>> GetAll(int? empresaId)
+        public async Task<List<Pago>> GetAll(int empresaId)
         {
             var pagos = await context.Pago.Where(p => p.EmpresaId == empresaId).ToListAsync();
             return pagos;
         }
 
-        public async Task<Pago> ObtenerPorId(int? empresaId, int id)
+        public async Task<Pago> ObtenerPorId(int empresaId, int id)
         {
             var pago = await context.Pago.Include(c=> c.CuentaPorCobrar).Where(p => p.EmpresaId == empresaId && p.Id == id).FirstOrDefaultAsync();
             return pago;

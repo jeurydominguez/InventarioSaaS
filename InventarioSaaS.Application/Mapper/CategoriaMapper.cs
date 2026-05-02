@@ -21,12 +21,12 @@ namespace InventarioSaaS.Application.Mapper
                 Descripcion = model.Descripcion
             };
         }
-        public static Categoria AModelo(CategoriaDto dto)
+        public static Categoria AModelo(CategoriaDto dto, int empresaId)
         {
             return new Categoria
             {
                 Nombre = dto.Nombre,
-                EmpresaId = dto.EmpresaId,
+                EmpresaId = empresaId,
                 Descripcion = dto.Descripcion
             };
         }
