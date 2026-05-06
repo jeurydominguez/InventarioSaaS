@@ -14,7 +14,7 @@ namespace InventarioSaaS.Domain.Entidades
         [Required]
         public required decimal Total { get; set; }
 
-        public List<DetalleVenta> Detalles { get; set; } = new();
+        public List<DetalleVenta> Detalles { get; set; } = [];
 
         [Required]
         public required TipoPago.EstadoVenta TipoPago { get; set; }

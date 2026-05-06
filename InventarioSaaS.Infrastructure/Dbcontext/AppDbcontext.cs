@@ -68,6 +68,12 @@ namespace InventarioSaaS.Infrastructure.ApplicationDbContext
                 .HasMany(p => p.Pagos)
                 .WithOne(c => c.CuentaPorCobrar)
                 .HasForeignKey(c => c.CuentasPorCobrarId);
+
+            builder.Entity<DetalleVenta>()
+                .HasOne(p => p.Producto)
+                .WithMany()
+                .HasForeignKey(p => p.ProductoId);
+                
         }
     }
 }

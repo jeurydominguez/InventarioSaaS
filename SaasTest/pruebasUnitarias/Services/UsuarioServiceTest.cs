@@ -33,7 +33,7 @@ namespace SaasTest.pruebasUnitarias.Services
             {
                 Nombre = "Empresa",
                 Email = "jeurydominguez53@gmail.com",
-                FechaCreacion = DateTime.Now,
+                FechaCreacion = DateTime.UtcNow,
                 Estado = "activo"
             };
             mockrepo.Setup(r => r.BuscarEmpresa("SoftEngine@gmail.com"))
