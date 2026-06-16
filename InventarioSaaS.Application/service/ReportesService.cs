@@ -38,7 +38,7 @@ namespace InventarioSaaS.Application.service
             return dtos; //recordatorio , cambiar las vistas a DateTime.Now para mejor visivilidad 
         }
 
-        public async Task<List<VentasPorDiaDto>> VentaPorRango(RangoDeVentasDto dto)
+        public async Task<List<VentasPorDiaDto>> VentaPorRango(DateTime inicio, DateTime final)
         {
             var empresa = await repository.BuscarEmpresa();
             if (empresa == null)
@@ -46,13 +46,13 @@ namespace InventarioSaaS.Application.service
                 throw new NoContentEx("Credenciales no validas");
             }
             int empresaId = int.Parse(empresa);
-            var inicioUtc = dto.Inicial.ToUniversalTime();
-            var finalUtc = dto.Final.ToUniversalTime();
+            var inicioUtc = inicio.ToUniversalTime();
+            var finalUtc = final.ToUniversalTime();
 
             var ventas = await repository.VentasPorDia(inicioUtc, finalUtc, empresaId);
             if( ventas.Count == 0)
             {
-                throw new NoContentEx($"No hay ventas desde: {dto.Inicial} hasta: {dto.Final}");
+                throw new NoContentEx($"No hay ventas desde: {inicio} hasta: {final}");
             }
             var dtos = Mapper.ReportesMaper.AVentasPorDiaDto(ventas);
             return dtos;
@@ -93,6 +93,50 @@ namespace InventarioSaaS.Application.service
             }
             var estado = await repository.EstadoDeCuentasPorCobrar(empresaId);
             return estado;
+        }
+
+        public async Task<GananciaNetaDto>ObtenerGanaciaNeta(DateTime inicio, DateTime final)
+        {
+            var empresa = await repository.BuscarEmpresa();
+            int empresaId = int.Parse(empresa);
+            if (empresa == null)
+            {
+                throw new NoContentEx("Credenciales no validas");
+            }
+
+            var ganacia = await repository.ObtenerGanaciaNeta(inicio, final, empresaId);
+            return ganacia;
+        }
+        public async Task<ReporteResumenDto>ObtenerResumen(DateTime inicio, DateTime final)
+        {
+            var empresa = await repository.BuscarEmpresa();
+            int empresaId = int.Parse(empresa);
+            if (empresa == null)
+            {
+                throw new NoContentEx("Credenciales no validas");
+            }
+
+            var resumen = await repository.ObtenerResumen(inicio, final, empresaId);
+            return resumen;
+        }
+
+        public async Task<List<VentaChartDto>>ObtenerVentaRango(DateTime inicio, DateTime final)
+        {
+            var empresa = await repository.BuscarEmpresa();
+            int empresaId = int.Parse(empresa);
+            if (empresa == null)
+            {
+                throw new NoContentEx("Credenciales no validas");
+            }
+
+            var datos = await repository.VentaPorRango(inicio, final, empresaId);
+            return datos;
+        }
+        public async Task<List<NotificacionDto>> ObtenerNotificaciones()
+        {
+            var empresaId = int.Parse(await repository.BuscarEmpresa());
+
+            return await repository.ObtenerNotificaciones(empresaId);
         }
     }
 }

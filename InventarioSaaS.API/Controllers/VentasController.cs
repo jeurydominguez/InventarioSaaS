@@ -22,12 +22,15 @@ namespace InventarioSaaS.API.Controllers
         {
             if(dto.TipoPago == TipoPago.EstadoVenta.credito && dto.ClienteId == null)
             {
-                return BadRequest("Es necesario el cliente para aplicar credito");
+                return BadRequest(new
+                {
+                    mensaje = "Debe seleccionar un cliente para ventas a crédito."
+                });
             }
             await service.CrearVenta(dto);
             return Ok();
         }
-        [HttpGet]
+        [HttpGet("all")]
         [Authorize]
         public async Task<IActionResult> ObtenerTodos()
         {
@@ -42,5 +45,29 @@ namespace InventarioSaaS.API.Controllers
             var venta = await service.Obtener(id);
             return Ok(venta);
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<PagedResponse<LeerVentasDto>>>Obtener([FromQuery]VentasQuery query)
+        {
+            var ventas = await service.ObtenerP(query);
+            return Ok(ventas);
+        }
+        [HttpGet("{id}/pdf")]
+        public async Task<IActionResult> DescargarFactura(int id)
+        {
+            var venta = await service.Obtener(id);
+
+            if (venta is null)
+                return NotFound();
+
+            var pdf = FacturaPdfGenerator.Generar(venta);
+
+            return File(
+                pdf,
+                "application/pdf",
+                $"Factura-{venta.Id}.pdf");
+        }
+
     }
 }

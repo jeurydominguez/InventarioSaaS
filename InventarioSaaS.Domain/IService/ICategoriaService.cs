@@ -1,4 +1,5 @@
 ﻿using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace InventarioSaaS.Domain.IService
         Task<CategoriaDto> ObtenerPorId(int Id);
         Task<List<LeerCategoriaDto>> Get();
         Task Eliminar(int id);
+        Task<PagedResponse<LeerCategoriaDto>> Obtener(CategoriaQuery query);
     }
 }

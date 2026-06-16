@@ -126,6 +126,9 @@ namespace InventarioSaaS.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<decimal>("PrecioCompra")
+                        .HasColumnType("numeric");
+
                     b.Property<decimal>("PrecioUnitario")
                         .HasColumnType("numeric");
 
@@ -139,6 +142,8 @@ namespace InventarioSaaS.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductoId");
 
                     b.HasIndex("VentaId");
 
@@ -211,6 +216,9 @@ namespace InventarioSaaS.Infrastructure.Migrations
                     b.Property<int>("CategoriaId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("text");
+
                     b.Property<int>("EmpresaId")
                         .HasColumnType("integer");
 
@@ -221,6 +229,9 @@ namespace InventarioSaaS.Infrastructure.Migrations
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("PrecioCompra")
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("PrecioVenta")
                         .HasColumnType("numeric");
@@ -338,12 +349,15 @@ namespace InventarioSaaS.Infrastructure.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("numeric");
 
-                    b.Property<Guid>("UsuarioId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Venta");
                 });
@@ -499,11 +513,19 @@ namespace InventarioSaaS.Infrastructure.Migrations
 
             modelBuilder.Entity("InventarioSaaS.Domain.Entidades.DetalleVenta", b =>
                 {
+                    b.HasOne("InventarioSaaS.Domain.Entidades.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("InventarioSaaS.Domain.Entidades.Venta", "Venta")
                         .WithMany("Detalles")
                         .HasForeignKey("VentaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Producto");
 
                     b.Navigation("Venta");
                 });
@@ -546,6 +568,14 @@ namespace InventarioSaaS.Infrastructure.Migrations
                     b.HasOne("InventarioSaaS.Domain.Entidades.Cliente", "cliente")
                         .WithMany("Facturas")
                         .HasForeignKey("ClienteId");
+
+                    b.HasOne("InventarioSaaS.Domain.Entidades.Usuario", "Usuario")
+                        .WithMany("Ventas")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
 
                     b.Navigation("cliente");
                 });
@@ -611,6 +641,11 @@ namespace InventarioSaaS.Infrastructure.Migrations
             modelBuilder.Entity("InventarioSaaS.Domain.Entidades.CuentasPorCobrar", b =>
                 {
                     b.Navigation("Pagos");
+                });
+
+            modelBuilder.Entity("InventarioSaaS.Domain.Entidades.Usuario", b =>
+                {
+                    b.Navigation("Ventas");
                 });
 
             modelBuilder.Entity("InventarioSaaS.Domain.Entidades.Venta", b =>

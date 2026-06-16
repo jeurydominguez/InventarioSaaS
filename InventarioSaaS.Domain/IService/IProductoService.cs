@@ -15,5 +15,7 @@ namespace InventarioSaaS.Domain.IService
         Task Actualizar(EditarProductoDto dto);
         Task<LeerProductoDtoUnidad> BuscarProductoPorId(int id);
         Task Eliminar(int id);
+        Task<PagedResponse<LeerProductoDto>> Obtener(ProductoQuery query);
+        Task<InventarioStatsDto> ObtenerStats();
     }
 }

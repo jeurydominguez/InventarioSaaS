@@ -1,0 +1,387 @@
+﻿@using InventarioSaaS.Web.Models.Customers
+@using InventarioSaaS.Web.Models.Products
+@using InventarioSaaS.Web.Models.Sales
+@using InventarioSaaS.Web.Services
+@inject ProductService ProductService
+@inject CustomerService CustomerService
+@inject SalesService SalesService
+@inject NotificationStateService NotificationState
+@using InventarioSaaS.Web.Models.Common
+
+@if (Open)
+{
+    <!-- OVERLAY -->
+    <div class="
+        fixed inset-0
+        bg-black/40
+        backdrop-blur-sm
+        z-40"
+         @onclick="CloseDrawer">
+    </div>
+
+    <!-- DRAWER -->
+    <div class="
+        fixed
+        top-0
+        right-0
+        z-50
+
+        h-screen
+        w-full
+        sm:w-[650px]
+
+        bg-surface
+        dark:bg-darkSurface
+
+        border-l
+        border-borderColor
+        dark:border-darkBorder
+
+        shadow-2xl
+
+        flex
+        flex-col">
+
+        <!-- HEADER -->
+        <div class="
+            px-8 py-6
+            border-b
+            border-borderColor
+            dark:border-darkBorder">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="
+                        text-3xl
+                        font-bold
+                        text-textPrimary
+                        dark:text-darkTextPrimary">
+
+                        Nueva factura
+
+                    </h2>
+
+                    <p class="
+                        mt-2
+                        text-textMuted
+                        dark:text-darkTextMuted">
+
+                        Crea una nueva venta.
+
+                    </p>
+
+                </div>
+
+                <button @onclick="CloseDrawer">
+                    ✕
+                </button>
+
+            </div>
+
+        </div>
+        <div class="
+            mt-6
+            p-6
+            rounded-3xl
+            bg-primary/10">
+
+            <div class="flex justify-between items-center">
+
+                <span class="text-lg font-semibold">
+                    Total
+                </span>
+
+                <span class="text-3xl font-bold text-primary">
+                    @Total.ToString("C")
+                </span>
+
+            </div>
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <div class="
+                    mt-4
+                    p-4
+                    rounded-2xl
+                    bg-red-500/10
+                    border
+                    border-red-500/20
+                    text-red-500">
+
+                    @ErrorMessage
+
+                </div>
+            }
+
+        </div>
+
+        <!-- BODY -->
+        <div class="
+            flex-1
+            overflow-auto
+            px-8 py-8
+            space-y-6">
+
+            <!-- CLIENTE -->
+            <div>
+
+                <label class="block mb-3 font-semibold">
+                    Cliente
+                </label>
+                @if (SelectedCustomer is not null)
+                {
+                    <div class="
+                        mb-3
+                        p-4
+                        rounded-2xl
+                        bg-primary/10
+                        border
+                        border-primary/20">
+
+                        <div class="font-bold text-primary">
+                            @SelectedCustomer.Nombre
+                        </div>
+
+                        <div class="text-sm opacity-70">
+                            @SelectedCustomer.NumeroTelefono
+                        </div>
+
+                    </div>
+                }
+                <CustomerPicker OnSelected="SelectCustomer"
+                                        SelectedCustomerId="Model.ClienteId" />
+
+            </div>
+
+            <!-- TIPO PAGO -->
+            <div>
+
+                <label class="block mb-3 font-semibold">
+                    Tipo de pago
+                </label>
+
+                <InputSelect @bind-Value="Model.TipoPago"
+                             class="
+                    w-full
+                    h-14
+                    px-5
+                    rounded-2xl
+                    bg-surfaceSoft
+                    dark:bg-darkSurfaceSoft">
+
+                    <option value="@TipoPago.EstadoVenta.Contado">
+                        Contado
+                    </option>
+
+                    <option value="@TipoPago.EstadoVenta.credito">
+                        Crédito
+                    </option>
+
+                </InputSelect>
+
+            </div>
+
+            <!-- PRODUCTOS -->
+            <div class="space-y-4">
+
+                <div class="flex items-center justify-between">
+
+                    <h3 class="font-bold text-xl">
+                        Productos
+                    </h3>
+
+                </div>
+                <ProductPicker OnSelected="AddSelectedProduct" />
+                @foreach (var item in Model.Productos)
+                {
+                    <div class="
+                        flex
+                        items-center
+                        gap-4
+                        p-4
+                        rounded-3xl
+                        bg-surfaceSoft
+                        dark:bg-darkSurfaceSoft">
+
+                        <!-- IMAGE -->
+                        <img src="@(string.IsNullOrWhiteSpace(item.Foto)
+                                ? "/images/placeholder.png"
+                                : item.Foto)"
+                             class="
+                        w-20
+                        h-20
+                        rounded-2xl
+                        object-cover" />
+
+                        <!-- INFO -->
+                        <div class="flex-1">
+
+                            <h3 class="font-bold">
+                                @item.Nombre
+                            </h3>
+
+                            <p class="text-sm opacity-70">
+                                Stock: @item.Stock
+                            </p>
+
+                            <p class="font-bold text-primary">
+                                @item.PrecioVenta.ToString("C")
+                            </p>
+
+                        </div>
+
+                        <!-- QTY -->
+                        <input @bind="item.Cantidad"
+                               type="number"
+                               min="1"
+                               max="@item.Stock"
+                        w-24
+                        h-12
+                        px-4
+                        rounded-xl
+                        bg-surface" />
+
+                        <!-- REMOVE -->
+                        <button @onclick="() => RemoveProduct(item)"
+                                class="
+                            w-12
+                            h-12
+                            rounded-2xl
+                            bg-red-500
+                            text-white">
+
+                            ✕
+
+                        </button>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="
+            px-8 py-6
+            border-t
+            border-borderColor
+            dark:border-darkBorder
+            flex justify-end gap-4">
+
+            <button @onclick="CloseDrawer"
+                    class="
+                px-6 py-3
+                rounded-2xl
+                bg-surfaceSoft">
+
+                Cancelar
+
+            </button>
+
+            <button @onclick="Save"
+                    class="
+                px-6 py-3
+                rounded-2xl
+                bg-primary
+                text-white">
+
+                Guardar factura
+
+            </button>
+
+        </div>
+
+    </div>
+}
+@code {
+    private CreateSaleDto Model = new();
+    private CustomerDto? SelectedCustomer;
+    private string ErrorMessage = "";
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+
+    [Parameter]
+
+    public EventCallback OnSaved { get; set; }
+    private decimal Total =>
+    Model.Productos.Sum(x =>
+        x.PrecioVenta * x.Cantidad);
+
+    private void RemoveProduct(ProductForSaleDto item)
+    {
+        Model.Productos.Remove(item);
+    }
+    private void SelectCustomer(CustomerDto? customer)
+    {
+        SelectedCustomer = customer;
+
+        if (customer is null)
+        {
+            Model.ClienteId = null;
+            return;
+        }
+
+        Model.ClienteId = customer.Id;
+    }
+    private async Task Save()
+    {
+        ErrorMessage = "";
+
+        var result =
+            await SalesService.CrearVenta(Model);
+        NotificationState.Notify();
+
+        if (!result.Success)
+        {
+            ErrorMessage = result.Message;
+            return;
+        }
+
+        await CloseDrawer();
+
+        await OnSaved.InvokeAsync();
+    }
+    private async Task CloseDrawer()
+    {
+        Model = new();
+
+        await OpenChanged.InvokeAsync(false);
+    }
+    private void AddSelectedProduct(ProductDto product)
+    {
+        var existing =
+            Model.Productos
+            .FirstOrDefault(x => x.Id == product.Id);
+
+        if (existing is not null)
+        {
+            if (existing.Cantidad >= product.Stock)
+                return;
+
+            existing.Cantidad++;
+
+            return;
+        }
+
+        if (product.Stock <= 0)
+            return;
+
+        Model.Productos.Add(new ProductForSaleDto
+        {
+            Id = product.Id,
+            Nombre = product.Nombre,
+            PrecioVenta = product.PrecioVenta,
+            Foto = product.Foto,
+            Stock = product.Stock,
+            Cantidad = 1
+        });
+    }
+
+}

@@ -1,0 +1,537 @@
+﻿@using InventarioSaaS.Web.Models.Products
+@using InventarioSaaS.Web.Models.Categories
+@using InventarioSaaS.Web.Services
+
+@inject ProductService ProductService
+@inject NotificationStateService NotificationState
+
+@if (Open)
+{
+    <!-- OVERLAY -->
+    <div class="
+        fixed inset-0
+        z-40
+
+        bg-black/40
+
+        backdrop-blur-sm
+
+        animate-fade
+        "
+         @onclick="Close">
+    </div>
+
+    <!-- DRAWER -->
+    <div class="
+        fixed
+        top-0
+        right-0
+        z-50
+
+        h-screen
+        w-full
+        sm:w-[560px]
+
+        bg-surface
+        dark:bg-darkSurface
+
+        border-l
+        border-borderColor
+        dark:border-darkBorder
+
+        shadow-2xl
+
+        flex
+        flex-col
+
+        animate-slide
+        ">
+
+        <!-- HEADER -->
+        <div class="
+            px-8 py-6
+
+            border-b
+            border-borderColor
+            dark:border-darkBorder
+            ">
+
+            <div class="flex items-start justify-between">
+
+                <div>
+
+                    <h2 class="
+                        text-3xl
+                        font-bold
+
+                        text-textPrimary
+                        dark:text-darkTextPrimary
+                        ">
+                        Nuevo producto
+                    </h2>
+
+                    <p class="
+                        mt-2
+
+                        text-textMuted
+                        dark:text-darkTextMuted
+                        ">
+                        Agrega un nuevo producto al inventario.
+                    </p>
+
+                </div>
+
+                <!-- CLOSE -->
+                <button @onclick="Close"
+                        class="
+                    w-12 h-12
+
+                    rounded-2xl
+
+                    hover:bg-surfaceSoft
+                    dark:hover:bg-darkSurfaceSoft
+
+                    transition-all
+                    ">
+
+                    ✕
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="
+            flex-1
+            overflow-auto
+
+            px-8 py-8
+
+            space-y-7
+            ">
+
+            <!-- IMAGE -->
+            <div>
+
+                <label class="
+                    block
+                    mb-3
+
+                    text-sm
+                    font-semibold
+
+                    text-textPrimary
+                    dark:text-darkTextPrimary
+                    ">
+                    URL de imagen
+                </label>
+
+                <input @bind="Model.Foto"
+                       placeholder="https://..."
+                       class="
+                w-full
+                h-14
+
+                px-5
+
+                rounded-2xl
+
+                bg-surfaceSoft
+                dark:bg-darkSurfaceSoft
+
+                border
+                border-borderColor
+                dark:border-darkBorder
+
+                outline-none
+
+                focus:border-primary
+
+                transition-all
+                " />
+
+                @if (!string.IsNullOrWhiteSpace(Model.Foto))
+                {
+                    <img src="@Model.Foto"
+                         class="
+                    mt-4
+                    w-full
+                    h-52
+                    object-contain
+                    rounded-3xl
+                    bg-surfaceSoft
+                    dark:bg-darkSurfaceSoft
+                    " />
+                }
+
+            </div>
+
+            <!-- PRODUCT -->
+            <div>
+
+                <label class="
+                    block
+                    mb-3
+
+                    text-sm
+                    font-semibold
+
+                    text-textPrimary
+                    dark:text-darkTextPrimary
+                    ">
+                    Nombre del producto
+                </label>
+
+                <input @bind="Model.Nombre"
+                       placeholder="MacBook Pro M4"
+                       class="
+                w-full
+                h-14
+
+                px-5
+
+                rounded-2xl
+
+                bg-surfaceSoft
+                dark:bg-darkSurfaceSoft
+
+                border
+                border-borderColor
+                dark:border-darkBorder
+
+                outline-none
+
+                focus:border-primary
+
+                transition-all
+                " />
+
+            </div>
+
+            <!-- CATEGORY -->
+            <div>
+
+                <label class="
+                    block
+                    mb-3
+
+                    text-sm
+                    font-semibold
+
+                    text-textPrimary
+                    dark:text-darkTextPrimary
+                    ">
+                    Categoría
+                </label>
+
+                <select @bind="Model.CategoriaId"
+                        class="
+                    w-full
+                    h-14
+
+                    px-5
+
+                    rounded-2xl
+
+                    bg-surfaceSoft
+                    dark:bg-darkSurfaceSoft
+
+                    border
+                    border-borderColor
+                    dark:border-darkBorder
+
+                    outline-none
+
+                    text-textPrimary
+                    dark:text-darkTextPrimary
+                    ">
+
+                    <option value="0">
+                        Selecciona una categoría
+                    </option>
+
+                    @foreach (var category in Categories)
+                    {
+                        <option value="@category.Id">
+                            @category.Nombre
+                        </option>
+                    }
+
+                </select>
+
+            </div>
+
+            <!-- GRID -->
+            <div class="grid grid-cols-2 gap-5">
+
+                <!-- PRICE -->
+                <div>
+
+                    <label class="
+                        block
+                        mb-3
+
+                        text-sm
+                        font-semibold
+
+                        text-textPrimary
+                        dark:text-darkTextPrimary
+                        ">
+                        Precio
+                    </label>
+
+                    <input @bind="Model.PrecioVenta"
+                           type="number"
+                           placeholder="$0.00"
+                           class="
+                    w-full
+                    h-14
+
+                    px-5
+
+                    rounded-2xl
+
+                    bg-surfaceSoft
+                    dark:bg-darkSurfaceSoft
+
+                    border
+                    border-borderColor
+                    dark:border-darkBorder
+
+                    outline-none
+
+                    focus:border-primary
+                    " />
+
+                </div>
+                <div>
+
+                    <label class="
+                        block
+                        mb-3
+
+                        text-sm
+                        font-semibold
+
+                        text-textPrimary
+                        dark:text-darkTextPrimary
+                        ">
+                        Compra del Item
+                    </label>
+
+                    <input @bind="Model.PrecioCompra"
+                           type="number"
+                           placeholder="$0.00"
+                           class="
+                    w-full
+                    h-14
+
+                    px-5
+
+                    rounded-2xl
+
+                    bg-surfaceSoft
+                    dark:bg-darkSurfaceSoft
+
+                    border
+                    border-borderColor
+                    dark:border-darkBorder
+
+                    outline-none
+
+                    focus:border-primary
+                    " />
+
+                </div>
+
+                <!-- STOCK -->
+                <div>
+
+                    <label class="
+                        block
+                        mb-3
+
+                        text-sm
+                        font-semibold
+
+                        text-textPrimary
+                        dark:text-darkTextPrimary
+                        ">
+                        Stock
+                    </label>
+
+                    <input @bind="Model.Stock"
+                           type="number"
+                           placeholder="0"
+                           class="
+                    w-full
+                    h-14
+
+                    px-5
+
+                    rounded-2xl
+
+                    bg-surfaceSoft
+                    dark:bg-darkSurfaceSoft
+
+                    border
+                    border-borderColor
+                    dark:border-darkBorder
+
+                    outline-none
+
+                    focus:border-primary
+                    " />
+
+                </div>
+
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div>
+
+                <label class="
+                    block
+                    mb-3
+
+                    text-sm
+                    font-semibold
+
+                    text-textPrimary
+                    dark:text-darkTextPrimary
+                    ">
+                    Descripción
+                </label>
+
+                <textarea @bind="Model.Descripcion"
+                          rows="5"
+                          placeholder="Describe el producto..."
+                          class="
+                w-full
+
+                px-5 py-4
+
+                rounded-2xl
+
+                bg-surfaceSoft
+                dark:bg-darkSurfaceSoft
+
+                border
+                border-borderColor
+                dark:border-darkBorder
+
+                outline-none
+
+                focus:border-primary
+                ">
+            </textarea>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="
+        px-8 py-6
+
+        border-t
+        border-borderColor
+        dark:border-darkBorder
+
+        flex items-center justify-end gap-4
+        ">
+
+        <!-- CANCEL -->
+        <button @onclick="Close"
+                class="
+            h-14
+            px-6
+
+            rounded-2xl
+
+            bg-surfaceSoft
+            dark:bg-darkSurfaceSoft
+
+            font-semibold
+
+            text-textPrimary
+            dark:text-darkTextPrimary
+            ">
+
+            Cancelar
+
+        </button>
+
+        <!-- SAVE -->
+        <button @onclick="Save"
+                class="
+            h-14
+            px-7
+
+            rounded-2xl
+
+            bg-primary
+            hover:bg-primary-dark
+
+            text-white
+            font-semibold
+
+            transition-all
+            hover:scale-105
+
+            shadow-glow
+            ">
+
+            Guardar producto
+
+        </button>
+
+    </div>
+
+</div>
+}
+
+@code {
+
+    [Parameter]
+    public bool Open { get; set; }
+
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter]
+    public CrearProductoDto Model { get; set; } = new();
+
+    [Parameter]
+    public List<CategoryDto> Categories { get; set; } = [];
+
+    [Parameter]
+    public EventCallback OnSaved { get; set; }
+
+    private async Task Save()
+    {
+        var success =
+            await ProductService.CrearProducto(Model);
+
+        NotificationState.Notify();
+
+        if (success)
+        {
+            await OnSaved.InvokeAsync();
+
+            await Close();
+
+            await OnSaved.InvokeAsync();
+
+            Model = new();
+        }
+    }
+
+    private async Task Close()
+    {
+        await OpenChanged.InvokeAsync(false);
+    }
+}

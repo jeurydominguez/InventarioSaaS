@@ -1,0 +1,176 @@
+﻿@using InventarioSaaS.Web.Models.Products
+@using InventarioSaaS.Web.Services
+
+@inject ProductService ProductService
+
+<div class="space-y-4">
+
+    <!-- SEARCH -->
+    <input @bind="Search"
+           @bind:event="oninput"
+           placeholder="Buscar producto..."
+           class="
+    w-full
+    h-14
+    px-5
+    rounded-2xl
+    bg-surfaceSoft
+    dark:bg-darkSurfaceSoft
+    outline-none" />
+
+    <!-- PRODUCTS -->
+    <div class="
+        grid
+        grid-cols-1
+        md:grid-cols-2
+        gap-4
+        max-h-[500px]
+        overflow-auto">
+
+        @if (Loading)
+        {
+            <p>Cargando productos...</p>
+        }
+        else if (FilteredProducts.Count == 0)
+        {
+            <p>No se encontraron productos.</p>
+        }
+        else
+        {
+            @foreach (var product in FilteredProducts)
+            {
+                <button type="button"
+                        @onclick="() => SelectProduct(product)"
+                        class="
+                    p-4
+                    rounded-3xl
+                    border
+                    border-borderColor
+                    dark:border-darkBorder
+                    bg-surface
+                    dark:bg-darkSurface
+                    hover:scale-[1.01]
+                    transition-all
+                    text-left">
+
+                    <div class="flex gap-4">
+
+                        <img src="@product.Foto"
+                             class="
+                        w-24
+                        h-24
+                        rounded-2xl
+                        object-cover" />
+
+                        <div class="flex-1">
+
+                            <h3 class="
+                                text-lg
+                                font-bold">
+
+                                @product.Nombre
+
+                            </h3>
+
+                            <p class="mt-2 text-sm opacity-70">
+                                Stock: @product.Stock
+                            </p>
+
+                            <p class="
+                                mt-3
+                                text-primary
+                                font-bold
+                                text-xl">
+
+                                @product.PrecioVenta.ToString("C")
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </button>
+            }
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback<ProductDto> OnSelected { get; set; }
+
+    private List<ProductDto> Products = [];
+
+    private List<ProductDto> FilteredProducts = [];
+
+    private bool Loading;
+
+    private string search = "";
+
+    private string Search
+    {
+        get => search;
+        set
+        {
+            search = value;
+
+            FilterProducts();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProducts();
+    }
+
+    private async Task LoadProducts()
+    {
+        try
+        {
+            Loading = true;
+
+            var response =
+                await ProductService.ObtenerProductos(
+                    page: 1,
+                    pageSize: 100,
+                    search: "");
+
+            Products = response?.Data ?? [];
+
+            FilterProducts();
+        }
+        finally
+        {
+            Loading = false;
+        }
+    }
+
+    private void FilterProducts()
+    {
+        if (string.IsNullOrWhiteSpace(Search))
+        {
+            FilteredProducts = Products;
+        }
+        else
+        {
+            FilteredProducts = Products
+                .Where(x =>
+                    x.Nombre.Contains(
+                        Search,
+                        StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task SelectProduct(ProductDto product)
+    {
+        await OnSelected.InvokeAsync(product);
+    }
+
+}

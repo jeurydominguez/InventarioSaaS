@@ -6,6 +6,7 @@ using InventarioSaaS.Domain.IService;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -57,6 +58,15 @@ namespace InventarioSaaS.Application.service
             var dtos = Mapper.ProductoMapper.AListaDto(productos);
             return dtos;
         }
+        public async Task<PagedResponse<LeerProductoDto>> Obtener(ProductoQuery query)
+        {
+            var empresaId = await repository.BuscarClaimEmpresaID();
+            if (empresaId == null)
+            {
+                throw new NotFoundEx("No se pudo obtener el id de la empresa");
+            }
+            return await repository.Obtener(empresaId, query);
+        }
 
         public async Task<EditarProductoDto> Editar(int id)
         {
@@ -69,7 +79,7 @@ namespace InventarioSaaS.Application.service
             var productoEncontrado = await repository.BuscarProducto(empresaId, id); //se busca el producto la primera vez por que necesito saber si el producto existe en el contexto actual
             if (productoEncontrado == null || productoEncontrado.EmpresaId != empresaId)
             {
-                throw new NoContentEx("Producto no encontrado");
+                throw new NotFoundEx("Producto no encontrado");
             }
 
             var productoDto = Mapper.ProductoMapper.AEditarProductoDto(productoEncontrado);// lo convertimos a Dto para enviarlo al controller y aplicarle el parche
@@ -81,21 +91,28 @@ namespace InventarioSaaS.Application.service
             var producto = await repository.BuscarProducto(dto.EmpresaId, dto.Id);//se busca una segunda vez para tener el producto original de la base de datos 
             if(producto == null || producto.EmpresaId != dto.EmpresaId)
             {
-                throw new NoContentEx("Producto no encontrado");
+                throw new NotFoundEx("Producto no encontrado");
             }
             var categoria = await repository.BuscarCategoria(dto.EmpresaId, dto.CategoriaId);
             if(categoria == null || categoria.EmpresaId != dto.EmpresaId)
             {
-                throw new NoContentEx("Categoria no encontrada");
+                throw new NotFoundEx("Categoria no encontrada");
             }
 
             //se aplican los cambios que recibo del dto ya parcheado desde el controller
             producto.Nombre = dto.Nombre;
             producto.PrecioVenta = dto.PrecioVenta;
+            producto.PrecioCompra = dto.PrecioCompra;
             producto.Stock = dto.Stock;
             producto.CategoriaId = dto.CategoriaId;
+            producto.Foto = dto.Foto;
+            producto.Descripcion = dto.Descripcion;
+
 
             //aqui termina todo , es complicado por cuestiones de logica pero funciona 10/10
+            Console.WriteLine(producto.EmpresaId);
+            Console.WriteLine(producto.Nombre);
+            Console.WriteLine(producto.CategoriaId);
             await repository.Editar(producto);
         }
 
@@ -132,6 +149,19 @@ namespace InventarioSaaS.Application.service
                 throw new NoContentEx("Producto no encontrado");
             }
             await repository.Eliminar(producto);
+        }
+
+        public async Task<InventarioStatsDto> ObtenerStats()
+        {
+            var empresaId = await repository.BuscarClaimEmpresaID();
+            if (empresaId == null)
+            {
+                throw new NoContentEx("Credenciales Incorrectas");
+            }
+
+            var productos = await repository.BuscarStats(empresaId);
+
+            return productos;
         }
     }
 }

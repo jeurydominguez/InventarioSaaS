@@ -1,0 +1,119 @@
+﻿@page "/facturas/nueva"
+@using InventarioSaaS.Web.Components.Invoices
+@layout DashboardLayout
+
+<div class="max-w-5xl mx-auto space-y-8">
+
+    <!-- HEADER -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+
+        <div>
+            <AppButton Onclick="() => OpenQuickInvoice = true">
+                Nueva factura
+            </AppButton>
+
+            <p class="text-textMuted mt-2">
+                Crea y gestiona facturas modernas para tus clientes.
+            </p>
+
+        </div>
+
+        <div class="flex gap-4">
+
+            <AppButton Variant="secondary">
+                Cancelar
+            </AppButton>
+
+            <AppButton>
+                Guardar factura
+            </AppButton>
+
+        </div>
+
+    </div>
+
+    <!-- CLIENT -->
+    <FormSection Title="Información del cliente"
+                 Subtitle="Datos generales del cliente">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <AppInput Label="Nombre del cliente"
+                      Placeholder="Ej: Tech Solutions SRL" />
+
+            <AppInput Label="Correo electrónico"
+                      Placeholder="cliente@email.com"
+                      Type="email" />
+
+            <AppInput Label="Teléfono"
+                      Placeholder="(809) 000-0000" />
+
+            <AppSelect Label="Tipo de comprobante"
+                       Options="VoucherTypes" />
+
+        </div>
+
+    </FormSection>
+
+    <!-- DETAILS -->
+    <FormSection Title="Detalles de factura"
+                 Subtitle="Información general de la factura">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <AppInput Label="Número de factura"
+                      Placeholder="FAC-1024" />
+
+            <AppInput Label="Fecha"
+                      Type="date" />
+
+            <AppInput Label="Subtotal"
+                      Placeholder="$0.00" />
+
+            <AppInput Label="ITBIS"
+                      Placeholder="$0.00" />
+
+        </div>
+
+    </FormSection>
+
+    <!-- TOTAL -->
+    <div class="bg-primary rounded-[32px] p-8 text-white">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-white/70">
+                    Total estimado
+                </p>
+
+                <h2 class="text-5xl font-bold mt-2">
+                    $24,780
+                </h2>
+
+            </div>
+
+            <AppButton Variant="secondary">
+                Generar factura
+            </AppButton>
+
+        </div>
+
+    </div>
+
+</div>
+<QuickInvoiceDrawer Open="OpenQuickInvoice"
+                    OpenChanged="@(value => OpenQuickInvoice = value)" />
+
+@code {
+    private bool OpenQuickInvoice;
+
+    private List<string> VoucherTypes = new()
+    {
+        "Factura de consumo",
+        "Crédito fiscal",
+        "Gubernamental",
+        "Exportación"
+    };
+}

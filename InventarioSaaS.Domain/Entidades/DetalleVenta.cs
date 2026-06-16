@@ -23,5 +23,7 @@ namespace InventarioSaaS.Domain.Entidades
         public Venta Venta { get; set; }
 
         public decimal SubTotal { get; set; }
+
+        public decimal PrecioCompra { get; set; }
     }
 }

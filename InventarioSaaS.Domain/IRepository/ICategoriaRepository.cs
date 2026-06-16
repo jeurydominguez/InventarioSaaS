@@ -16,5 +16,6 @@ namespace InventarioSaaS.Domain.IRepository
         Task Crear(Categoria categoria);
         Task Eliminar(Categoria modelo);
         Task<Categoria> Buscar(int empresaId, CategoriaDto dto);
+        Task<PagedResponse<LeerCategoriaDto>> Obtener(int empresaId, CategoriaQuery queryparams);
     }
 }

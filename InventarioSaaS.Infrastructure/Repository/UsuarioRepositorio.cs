@@ -78,5 +78,80 @@ namespace InventarioSaaS.Infrastructure.Repository
         {
             await userManager.AddClaimAsync(user, new Claim("rol", "admin")); //repito , no queria hacerlo asi pero no se si habian metodos mejores 
         }
+
+        public async Task<string> BuscarEmail()
+        {
+            var claim = httpContext.HttpContext!.User.Claims.Where(x => x.Type == "Email").FirstOrDefault().Value;
+            return claim;
+        }
+
+        public async Task<UsuarioActualDto>Me(string email)
+        {
+  var usuario = await dbContext.Users
+        .Include(x => x.Empresa)
+        .FirstOrDefaultAsync(x => x.Email == email);
+
+    if (usuario is null)
+        return null;
+
+    return new UsuarioActualDto
+    {
+        Nombre = usuario.UserName ?? "",
+        Email = usuario.Email ?? "",
+
+        Iniciales = string.Concat(
+            usuario.NombreCompleto
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(palabra => palabra[0])
+        ).ToUpper(),
+
+        NombreEmpresa = usuario.Empresa.Nombre,
+        Rol = usuario.Rol
+    };
+        }
+        public async Task<int> BuscarEmpresaId()
+        {
+            var empresa = httpContext.HttpContext.User.Claims.Where(x => x.Type == "EmpresaId").FirstOrDefault().Value;
+
+            int empresaId = int.Parse(empresa);
+            return empresaId;
+        }
+
+        public async Task<Empresa>BuscarEmpresaPorId(int empresaId)
+        {
+            var empresa = await dbContext.Empresa.Where(x => x.Id == empresaId).FirstOrDefaultAsync();
+            return empresa;
+        }
+
+        public async Task<IdentityResult> CrearUser(Usuario user, CrearUsuarioDto dto)
+        {
+            var result = await userManager.CreateAsync(user, dto.PassWord);
+            return result;
+        }
+
+        public async Task<Usuario>BuscarUsuarioConID(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            return user;
+        }
+
+        public async Task<IdentityResult> ConfirmarEmail(Usuario user, string token)
+        {
+            var resultado = await userManager.ConfirmEmailAsync(user, token);
+
+            return resultado;
+        }
+
+        public async Task<bool> VerificarEmail(Usuario user)
+        {
+            var resultado = await userManager.IsEmailConfirmedAsync(user);
+            return resultado;
+        }
+
+        public async Task<string> GenerarEmailConfirmation( Usuario user)
+        {
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            return token;
+        }
     }
 }

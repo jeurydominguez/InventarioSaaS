@@ -21,6 +21,6 @@ namespace InventarioSaaS.Domain.DTO
 
         public LeerCuentasPorCobrarReportes? CuentaPorCobrar { get; set; }//este es de reportes
 
-        public Guid UsuarioId { get; set; }
+        public string UsuarioId { get; set; }
     }
 }

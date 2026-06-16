@@ -1,4 +1,5 @@
-﻿using InventarioSaaS.Domain.Entidades;
+﻿using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -15,5 +16,7 @@ namespace InventarioSaaS.Domain.IRepository
         Task Editar(Producto producto);
         Task Eliminar(Producto modelo);
         Task<Categoria> BuscarCategoria(int empresaId, int id);
+        Task<PagedResponse<LeerProductoDto>> Obtener(int empresaId, ProductoQuery queryParams);
+        Task<InventarioStatsDto> BuscarStats(int empresaId);
     }
 }

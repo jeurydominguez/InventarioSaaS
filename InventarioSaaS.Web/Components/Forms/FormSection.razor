@@ -1,0 +1,29 @@
+﻿<div class="bg-surface border border-borderColor rounded-[32px] shadow-soft p-8">
+
+    <div class="mb-8">
+
+        <h3 class="text-xl font-bold text-textPrimary">
+            @Title
+        </h3>
+
+        <p class="text-textMuted mt-2">
+            @Subtitle
+        </p>
+
+    </div>
+
+    @ChildContent
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Subtitle { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

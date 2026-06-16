@@ -1,4 +1,5 @@
 ﻿using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace InventarioSaaS.API.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         [Authorize]
         public async Task<IActionResult> GetAll()
         {
@@ -45,6 +46,14 @@ namespace InventarioSaaS.API.Controllers
         {
             await service.Eliminar(id);
             return NoContent();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<PagedResponse<LeerCategoriaDto>>> Obtener([FromQuery] CategoriaQuery query)
+        {
+            var respuesta = await service.Obtener(query);
+            return Ok(respuesta);
         }
     }
 }

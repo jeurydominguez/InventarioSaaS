@@ -1,5 +1,6 @@
 ﻿using InventarioSaaS.Application.EX;
 using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Domain.IService;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -115,6 +116,19 @@ namespace InventarioSaaS.Application.service
             }
 
             await repository.Eliminar(cliente);
+        }
+
+        public async Task<PagedResponse<LeerClienteDtoVenta>> Obtener(ClienteQuery query)
+        {
+            var empresa = await repository.BuscarEmpresaId();
+            if (empresa == null)
+            {
+                throw new NotFoundEx("Credenciales no validas");
+            }
+            int empresaId = int.Parse(empresa);
+
+            var cliente = await repository.Obtener(empresaId, query);
+            return cliente;
         }
     }
 }

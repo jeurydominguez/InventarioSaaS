@@ -1,4 +1,6 @@
-﻿using InventarioSaaS.Domain.Entidades;
+﻿using InventarioSaaS.Application.Domain;
+using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Infrastructure.ApplicationDbContext;
 using Microsoft.AspNetCore.Http;
@@ -42,6 +44,32 @@ namespace InventarioSaaS.Infrastructure.Repository
                 .Where(c => c.EmpresaId == empresaId && c.Id == id)
                 .FirstOrDefaultAsync();
             return cuenta;
+        }
+
+        public async Task<PagedResponse<LeerCuentasPorCobrarReportes>> Obtener(int empresaId, CuentrasPorCobrarQuery queryparams)
+        {
+            var query = dbcontext.CuentasPorCobrar
+                .AsNoTracking()
+                .OrderByDescending(x=> x.FechaCreacion)
+                .Where(x => x.EmpresaId == empresaId)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(queryparams.NombreCliente))
+            {
+                query = query.Where(x => x.Cliente.Nombre == queryparams.NombreCliente);
+            }
+
+            var resultado = query
+                .Select(x => new LeerCuentasPorCobrarReportes
+                {
+                    Id = x.Id,
+                    VentaID = x.VentaId,
+                    MontoPendiente = x.MontoPendiente,
+                    MontoTotal = x.MontoTotal,
+                    Estado = x.Estado
+                });
+            return await resultado.PaginateAsync(queryparams.Page,
+                queryparams.PageSize);
         }
     }
 }

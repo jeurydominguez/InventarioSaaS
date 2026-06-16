@@ -13,7 +13,7 @@ namespace InventarioSaaS.Domain.DTO
         public TipoPago.EstadoVenta TipoPago { get; set; }
         public int? clienteId { get; set; }
         public LeerClienteDtoVenta Cliente { get; set; }
-        public Guid UsuarioId { get; set; }
+        public string UsuarioId { get; set; }
         public List<LeerDetalleVentaDto> detalle { get; set; }
     }
 }

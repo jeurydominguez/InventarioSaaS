@@ -1,0 +1,40 @@
+﻿<div class="space-y-2">
+
+    <label class="text-sm font-semibold text-textPrimary">
+        @Label
+    </label>
+
+    <select class="
+        w-full
+        h-14
+        px-5
+        rounded-2xl
+        bg-surface
+        border border-borderColor
+        text-textPrimary
+        outline-none
+        transition-all
+        focus:border-primary
+        focus:ring-4
+        focus:ring-primary/10
+        ">
+
+        @foreach (var option in Options)
+        {
+            <option value="@option">
+                @option
+            </option>
+        }
+
+    </select>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public List<string> Options { get; set; } = new();
+}

@@ -1,12 +1,14 @@
-﻿using InventarioSaaS.Domain.Entidades;
+﻿using InventarioSaaS.Application.Domain;
+using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
+using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Infrastructure.ApplicationDbContext;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using InventarioSaaS.Domain.IRepository;
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace InventarioSaaS.Infrastructure.Repository
 {
@@ -38,6 +40,21 @@ namespace InventarioSaaS.Infrastructure.Repository
             var productos = await dbcontext.Producto.Where(e => e.EmpresaId == empresaId).ToListAsync();
             return productos;
         }
+        public async Task<InventarioStatsDto> BuscarStats(int empresaId)
+        {
+            var produtos = dbcontext.Producto.Where(x => x.EmpresaId == empresaId);
+
+            return new InventarioStatsDto
+            {
+                TotalProductos = await produtos.CountAsync(),
+
+                StockBajo = await produtos.CountAsync(x => x.Stock < 10),
+
+                ValorInventario = await produtos.SumAsync(x => x.PrecioVenta * x.Stock),
+
+                TotalCategorias = await dbcontext.Categoria.CountAsync(x => x.EmpresaId == empresaId)
+            };
+        }
 
         public async Task<Producto> BuscarProducto(int empresaId, int productoId)
         {
@@ -62,6 +79,42 @@ namespace InventarioSaaS.Infrastructure.Repository
         {
             var categoria = await dbcontext.Categoria.Where(c => c.EmpresaId == empresaId && c.Id == id).FirstOrDefaultAsync();
             return categoria;
+        }
+        public async Task<PagedResponse<LeerProductoDto>> Obtener(int empresaId, ProductoQuery queryParams)
+        {
+            var query = dbcontext.Producto
+                .AsNoTracking()
+                .Where(x=> x.EmpresaId == empresaId)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(queryParams.Search))
+            {
+                query = query.Where(x =>
+                    x.Nombre.Contains(queryParams.Search));
+            }
+
+            if (!string.IsNullOrWhiteSpace(queryParams.Categoria))
+            {
+                query = query.Where(x =>
+                    x.Categoria.Nombre == queryParams.Categoria);
+            }
+
+
+            var resultado = query
+                .OrderBy(x => x.Nombre)
+                .Select(x => new LeerProductoDto
+                {
+                    Id = x.Id,
+                    Nombre = x.Nombre,
+                    PrecioVenta = x.PrecioVenta,
+                    Stock = x.Stock,
+                    CategoriaId = x.CategoriaId,
+                    Foto = x.Foto
+                });
+
+            return await resultado.PaginateAsync(
+                queryParams.Page,
+                queryParams.PageSize);
         }
     }
 }

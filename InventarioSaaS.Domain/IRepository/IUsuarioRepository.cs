@@ -19,6 +19,15 @@ namespace InventarioSaaS.Domain.IRepository
         Task<Claim> BuscarClaimRol();
         Task<Usuario> BuscarUsuarioConEmpresa(string email);
         Task HacerAdmin(Usuario user);
+        Task<string> BuscarEmail();
+        Task<UsuarioActualDto> Me(string email);
+        Task<int> BuscarEmpresaId();
+        Task<Empresa> BuscarEmpresaPorId(int empresaId);
+        Task<IdentityResult> CrearUser(Usuario user, CrearUsuarioDto dto);
+        Task<Usuario> BuscarUsuarioConID(string userId);
+        Task<IdentityResult> ConfirmarEmail(Usuario user, string token);
+        Task<bool> VerificarEmail(Usuario user);
+        Task<string> GenerarEmailConfirmation(Usuario user);
 
     }
 }

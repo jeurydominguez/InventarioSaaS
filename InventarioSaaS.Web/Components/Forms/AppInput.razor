@@ -1,0 +1,53 @@
+﻿<div class="space-y-2">
+
+    <label class="text-sm font-semibold text-textPrimary">
+        @Label
+    </label>
+
+    <input type="@Type"
+           placeholder="@Placeholder"
+           value="@Value"
+           @oninput="OnInput"
+           class="
+    w-full
+    h-14
+    px-5
+    rounded-2xl
+    bg-surface
+    border border-borderColor
+    text-textPrimary
+    placeholder:text-textMuted
+    outline-none
+    transition-all
+    focus:border-primary
+    focus:ring-4
+    focus:ring-primary/10
+    hover:border-primary/40
+    " />
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Placeholder { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Type { get; set; } = "text";
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    private async Task OnInput(ChangeEventArgs e)
+    {
+        Value = e.Value?.ToString() ?? "";
+
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

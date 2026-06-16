@@ -1,4 +1,5 @@
-﻿using InventarioSaaS.Domain.Entidades;
+﻿using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,6 @@ namespace InventarioSaaS.Domain.IRepository
         Task<List<Cliente>> ObtenerTodo(int id);
         Task Actualizar(Cliente cliente);
         Task Eliminar(Cliente modelo);
+        Task<PagedResponse<LeerClienteDtoVenta>> Obtener(int empresaId, ClienteQuery queryparams);
     }
 }

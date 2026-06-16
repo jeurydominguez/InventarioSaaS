@@ -1,0 +1,340 @@
+﻿@using InventarioSaaS.Web.Models
+@using InventarioSaaS.Web.Models.Auth
+@using InventarioSaaS.Web.Services
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@inject ReportService ReportService
+@inject NotificationStateService NotificationState
+@inject UserService userService
+<div class="
+h-20
+bg-surface/80
+backdrop-blur-xl
+border-b border-borderColor
+px-4 sm:px-6 lg:px-8
+flex
+items-center
+justify-between
+sticky
+top-0
+z-40
+">
+
+<!-- LEFT -->
+<div>
+
+    <h1 class="
+        text-2xl
+        font-bold
+        text-textPrimary
+        ">
+
+        Zentra Business
+
+    </h1>
+
+    <p class="
+        text-sm
+        text-textMuted
+        mt-1
+        ">
+
+        Bienvenido nuevamente 👋
+
+    </p>
+
+</div>
+
+    <!-- RIGHT -->
+    <div class="flex items-center gap-4">
+
+        <!-- SEARCH -->
+        <div class="hidden lg:block">
+
+            <button @onclick="OpenPalette"
+                    class="
+                w-72
+                h-12
+                rounded-2xl
+                border border-borderColor
+                bg-surface
+                dark:bg-darkSurface
+                border-borderColor
+                dark:border-darkBorder
+                px-4
+                flex items-center justify-between
+                hover:bg-surfaceSoft
+                transition-all">
+
+                <div class="flex items-center gap-3">
+
+                    <span class="text-gray-400">
+                        🔍
+                    </span>
+
+                    <span class="
+                        text-sm
+                        text-textMuted">
+                        Buscar...
+                    </span>
+
+                </div>
+
+                <div class="
+                    px-2 py-1
+                    rounded-lg
+                    bg-surfaceSoft
+                    text-xs
+                    text-textMuted">
+
+                    CTRL K
+
+                </div>
+
+            </button>
+
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <button @onclick="ToggleNotifications"
+                class="
+            relative
+            w-12 h-12
+            rounded-2xl
+            border border-borderColor
+            bg-surface
+            border-borderColor
+            dark:border-darkBorder
+            dark:bg-darkSurface
+            hover:bg-surfaceSoft
+            transition-all
+            flex items-center justify-center">
+
+            🔔
+
+            @if (Notificaciones.Any())
+            {
+                <span class="
+                    absolute
+                    -top-1
+                    -right-1
+
+                    w-5 h-5
+
+                    rounded-full
+
+                    bg-red-500
+
+                    text-white
+                    text-xs
+
+                    flex
+                    items-center
+                    justify-center">
+
+                    @Notificaciones.Count
+
+                </span>
+            }
+
+        </button>
+        @if (MostrarNotificaciones)
+        {
+            <div class="
+                absolute
+                right-0
+                top-16
+
+                w-96
+
+                bg-surface
+                dark:bg-darkSurface
+
+                border border-borderColor
+
+                rounded-3xl
+
+                shadow-2xl
+
+                overflow-hidden">
+
+                <div class="
+                    p-4
+                    border-b">
+
+                    <h3 class="font-bold">
+                        Notificaciones
+                    </h3>
+
+                </div>
+
+                @foreach (var item in Notificaciones)
+                {
+                    <div class="
+                        p-4
+                        border-b
+                        flex
+                        items-start
+                        gap-3">
+
+                        <div class="@GetColor(item.Tipo)">
+                            @GetIcon(item.Tipo)
+                        </div>
+
+                        <div>
+
+                            <p class="font-semibold">
+                                @item.Titulo
+                            </p>
+
+                            <p class="text-sm text-textMuted">
+                                @item.Mensaje
+                            </p>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+
+        <!-- USER -->
+        <button @onclick="IrAconfiguracion" class="
+            flex
+            items-center
+            gap-3
+            px-3 py-2
+            rounded-2xl
+            border border-borderColor
+            bg-surface
+            dark:bg-darkSurface
+            hover:bg-surfaceSoft
+            transition-all">
+
+            <div class="
+                w-10 h-10
+                rounded-xl
+                bg-gradient-to-br
+                from-primary
+                to-indigo-400
+                text-white
+                flex items-center justify-center
+                font-bold">
+
+                @Usuario.Iniciales
+
+            </div>
+
+            <div class="hidden sm:block text-left">
+
+                <p class="
+                    text-sm
+                    font-semibold
+                    text-textPrimary">
+
+                    @Usuario.Nombre
+
+                </p>
+
+                <p class="
+                    text-xs
+                    text-textMuted">
+
+                    @Usuario.Rol
+
+                </p>
+
+            </div>
+
+        </button>
+
+    </div>
+</div>
+<CommandPalette Open="OpenCommandPalette"
+                OpenChanged="@(value => OpenCommandPalette = value)" />
+@code{
+    private List<NotificacionDto> Notificaciones = [];
+    private bool MostrarNotificaciones;
+    private bool OpenCommandPalette;
+    private UsuarioActualDto Usuario = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Usuario =
+            await AuthService.ObtenerUsuarioActual()
+            ?? new();
+
+        NotificationState.OnChange += RefreshNotifications;
+
+        userService.OnChange += ReloadUser;
+
+        await CargarNotificaciones();
+
+    }
+    private async Task CargarNotificaciones()
+    {
+        Notificaciones =
+            await ReportService.ObtenerNotificaciones();
+    }
+    private string GetColor(string tipo)
+    {
+        return tipo switch
+        {
+            "danger" =>
+                "w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center",
+
+            "warning" =>
+                "w-10 h-10 rounded-xl bg-yellow-100 text-yellow-600 flex items-center justify-center",
+
+            "success" =>
+                "w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center",
+
+            _ =>
+                "w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center"
+        };
+    }
+    private async void RefreshNotifications()
+    {
+        await CargarNotificaciones();
+
+        await InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        NotificationState.OnChange -= RefreshNotifications;
+        userService.OnChange -= ReloadUser;
+    }
+
+    private string GetIcon(string tipo)
+    {
+        return tipo switch
+        {
+            "danger" => "🚨",
+            "warning" => "⚠️",
+            "success" => "✅",
+            _ => "ℹ️"
+        };
+    }
+    private void ToggleNotifications()
+{
+    MostrarNotificaciones =
+        !MostrarNotificaciones;
+}
+    private void OpenPalette()
+    {
+        OpenCommandPalette = true;
+    }
+    private void IrAconfiguracion()
+    {
+        Navigation.NavigateTo("/settings");
+    }
+    private async void ReloadUser()
+    {
+        Usuario =
+            await AuthService.ObtenerUsuarioActual()
+            ?? new();
+
+        await InvokeAsync(StateHasChanged);
+    }
+}

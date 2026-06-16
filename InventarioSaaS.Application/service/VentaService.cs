@@ -24,8 +24,7 @@ namespace InventarioSaaS.Application.service
             var empresa = await repository.BuscarEmpresaId();
             int empresaId = int.Parse(empresa);
 
-            var usuario = await repository.BuscarUsuarioId();
-            Guid usuarioId = Guid.Parse(usuario);
+            var usuarioId = await repository.BuscarUsuarioId();
 
             var productos = await repository.BuscarProductos(dto.Productos, empresaId);
 
@@ -115,6 +114,7 @@ namespace InventarioSaaS.Application.service
                     ProductoId = dto.Id,
                     Cantidad = dto.Cantidad,
                     PrecioUnitario = producto!.PrecioVenta,
+                    PrecioCompra = producto!.PrecioCompra,
                     SubTotal = dto.Total
                 };
                 ventas.Add(detalle);
@@ -158,6 +158,15 @@ namespace InventarioSaaS.Application.service
                 EmpresaId = venta.EmpresaId
             };
             await repository.CrearCuentaPorCobrar(cuenta);
+        }
+
+        public async Task<PagedResponse<LeerVentasDto>>ObtenerP(VentasQuery query)
+        {
+            var empresa = await repository.BuscarEmpresaId();
+            int empresaId = int.Parse(empresa);
+
+            var ventas = await repository.ObtenerP(empresaId, query);
+            return ventas;
         }
     }
 }

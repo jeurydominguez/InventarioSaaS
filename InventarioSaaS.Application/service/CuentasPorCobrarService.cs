@@ -51,5 +51,17 @@ namespace InventarioSaaS.Application.service
             var dto = Mapper.CuentasPorCobrarMapper.ALeerCuentasPorCobrarUnidad(cuenta);
             return dto;
         }
+
+        public async Task<PagedResponse<LeerCuentasPorCobrarReportes>> ObtenerP(CuentrasPorCobrarQuery query)
+        {
+            var claim = await repository.ObtenerEmpresaId();
+            if (claim == null)
+            {
+                throw new NoContentEx("Credenciales no validas");
+            }
+            int empresaId = int.Parse(claim);
+            var cuentas = await repository.Obtener(empresaId, query);
+            return cuentas;
+        }
     }
 }

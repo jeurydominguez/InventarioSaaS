@@ -1,0 +1,32 @@
+﻿<div class="@GetClasses()">
+
+    @Text
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Variant { get; set; } = "success";
+
+    private string GetClasses()
+    {
+        var baseClasses =
+            "px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center";
+
+        return Variant switch
+        {
+            "danger" =>
+                $"{baseClasses} bg-red-100 text-red-700",
+
+            "warning" =>
+                $"{baseClasses} bg-yellow-100 text-yellow-700",
+
+            _ =>
+                $"{baseClasses} bg-green-100 text-green-700"
+        };
+    }
+}

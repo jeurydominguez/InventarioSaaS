@@ -1,0 +1,228 @@
+﻿@using InventarioSaaS.Web.Models
+
+<div class="
+    bg-surface
+    dark:bg-darkSurface
+
+    border
+    border-borderColor
+    dark:border-darkBorder
+
+    rounded-[32px]
+
+    p-8
+
+    shadow-soft
+    ">
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between mb-8">
+
+        <div>
+
+            <h3 class="
+                text-2xl
+                font-bold
+
+                text-textPrimary
+                dark:text-darkTextPrimary
+                ">
+                Actividad reciente
+            </h3>
+
+            <p class="
+                mt-1
+                text-sm
+
+                text-textMuted
+                dark:text-darkTextMuted
+                ">
+                Eventos del sistema en tiempo real
+            </p>
+
+        </div>
+
+        <!-- STATUS -->
+        <div class="
+            flex items-center gap-2
+
+            px-3 py-2
+
+            rounded-xl
+
+            bg-green-50
+            dark:bg-green-500/10
+
+            text-green-600
+            dark:text-green-400
+
+            text-sm
+            font-semibold
+            ">
+
+            <div class="
+                w-2 h-2
+                rounded-full
+                bg-green-500
+                animate-pulse
+                ">
+            </div>
+
+            Live
+
+        </div>
+
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="space-y-8">
+
+        @foreach (var item in Activities)
+        {
+            <div class="
+                relative
+                flex
+                gap-5
+
+                hover:bg-surfaceSoft
+                dark:hover:bg-darkSurfaceSoft
+
+                rounded-2xl
+
+                p-4
+
+                transition-all
+                ">
+
+                <!-- LINE -->
+                <div class="
+                    absolute
+                    left-8
+                    top-14
+
+                    w-[2px]
+                    h-full
+
+                    bg-borderColor
+                    dark:bg-darkBorder
+                    ">
+                </div>
+
+                <!-- ICON -->
+                <div class="
+                    relative
+                    z-10
+
+                    w-16 h-16
+
+                    rounded-2xl
+
+                    flex items-center justify-center
+
+                    text-2xl
+
+                    @item.Color
+                    ">
+
+                    @item.Icon
+
+                </div>
+
+                <!-- CONTENT -->
+                <div class="flex-1">
+
+                    <div class="
+                        flex
+                        items-start
+                        justify-between
+                        gap-4
+                        ">
+
+                        <div>
+
+                            <h4 class="
+                                font-semibold
+
+                                text-textPrimary
+                                dark:text-darkTextPrimary
+                                ">
+                                @item.Title
+                            </h4>
+
+                            <p class="
+                                mt-2
+                                text-sm
+                                leading-relaxed
+
+                                text-textMuted
+                                dark:text-darkTextMuted
+                                ">
+                                @item.Description
+                            </p>
+
+                        </div>
+
+                        <span class="
+                            whitespace-nowrap
+
+                            text-xs
+
+                            text-textMuted
+                            dark:text-darkTextMuted
+                            ">
+                            @item.Time
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    private List<ActivityItem> Activities = new()
+    {
+        new()
+        {
+            Icon = "🧾",
+            Title = "Nueva factura creada",
+            Description = "Factura #FAC-1028 creada para Tech Solutions.",
+            Time = "Hace 2 min",
+            Color = "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
+        },
+
+        new()
+        {
+            Icon = "💰",
+            Title = "Pago recibido",
+            Description = "Pago de $2,450 recibido correctamente.",
+            Time = "Hace 12 min",
+            Color = "bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400"
+        },
+
+        new()
+        {
+            Icon = "📦",
+            Title = "Inventario actualizado",
+            Description = "Stock actualizado automáticamente.",
+            Time = "Hace 38 min",
+            Color = "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
+        },
+
+        new()
+        {
+            Icon = "👥",
+            Title = "Nuevo cliente agregado",
+            Description = "Creative Studio fue agregado al sistema.",
+            Time = "Hace 1h",
+            Color = "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400"
+        }
+    };
+
+}

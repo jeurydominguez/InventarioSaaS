@@ -1,0 +1,266 @@
+﻿<section class="
+    py-24
+    px-4 sm:px-6 lg:px-8
+    relative
+    overflow-hidden
+    ">
+
+    <!-- GLOW -->
+    <div class="
+        absolute
+        top-1/2 left-1/2
+        -translate-x-1/2 -translate-y-1/2
+        w-[700px] h-[700px]
+        bg-primary/5
+        blur-[120px]
+        rounded-full
+        ">
+    </div>
+
+    <div class="relative max-w-7xl mx-auto">
+
+        <!-- TITLE -->
+        <div class="text-center animate-fade-up">
+
+            <p class="
+                text-sm
+                font-semibold
+                tracking-[0.2em]
+                uppercase
+                text-textMuted
+                ">
+
+                Empresas creciendo con Zentra Business
+
+            </p>
+
+        </div>
+
+        <!-- LOGOS -->
+        <div class="
+            mt-14
+            grid grid-cols-2
+            md:grid-cols-3
+            lg:grid-cols-6
+            gap-6
+            ">
+
+            @foreach (var company in Companies)
+            {
+                <div class="
+                    h-24
+                    rounded-3xl
+                    border border-borderColor
+                    bg-white/70
+                    glass-effect
+                    flex items-center justify-center
+                    text-lg
+                    font-bold
+                    text-gray-400
+                    hover-lift
+                    ">
+
+                    @company
+
+                </div>
+            }
+
+        </div>
+
+        <!-- METRICS -->
+        <div class="
+            mt-24
+            grid grid-cols-1
+            md:grid-cols-2
+            xl:grid-cols-4
+            gap-8
+            ">
+
+            <!-- CARD -->
+            <div class="
+                bg-white
+                border border-borderColor
+                rounded-[32px]
+                p-8
+                shadow-soft
+                hover-lift
+                ">
+
+                <p class="
+                    text-sm
+                    font-semibold
+                    uppercase
+                    tracking-wide
+                    text-textMuted
+                    ">
+
+                    Facturación procesada
+
+                </p>
+
+                <h3 class="
+                    mt-6
+                    text-5xl
+                    font-black
+                    tracking-tight
+                    text-textPrimary
+                    ">
+
+                    $8.2M
+
+                </h3>
+
+                <p class="mt-4 text-textMuted">
+
+                    Procesados durante los últimos 12 meses.
+
+                </p>
+
+            </div>
+
+            <!-- CARD -->
+            <div class="
+                bg-gradient-to-br
+                from-primary
+                to-indigo-500
+                rounded-[32px]
+                p-8
+                text-white
+                shadow-[0_30px_80px_rgba(79,70,229,0.25)]
+                hover-lift
+                ">
+
+                <p class="
+                    text-sm
+                    font-semibold
+                    uppercase
+                    tracking-wide
+                    text-white/70
+                    ">
+
+                    Empresas activas
+
+                </p>
+
+                <h3 class="
+                    mt-6
+                    text-5xl
+                    font-black
+                    tracking-tight
+                    ">
+
+                    340+
+
+                </h3>
+
+                <p class="mt-4 text-white/80">
+
+                    Negocios creciendo diariamente con Zentra Business.
+
+                </p>
+
+            </div>
+
+            <!-- CARD -->
+            <div class="
+                bg-white
+                border border-borderColor
+                rounded-[32px]
+                p-8
+                shadow-soft
+                hover-lift
+                ">
+
+                <p class="
+                    text-sm
+                    font-semibold
+                    uppercase
+                    tracking-wide
+                    text-textMuted
+                    ">
+
+                    Disponibilidad
+
+                </p>
+
+                <h3 class="
+                    mt-6
+                    text-5xl
+                    font-black
+                    tracking-tight
+                    text-textPrimary
+                    ">
+
+                    99.9%
+
+                </h3>
+
+                <p class="mt-4 text-textMuted">
+
+                    Infraestructura moderna y segura.
+
+                </p>
+
+            </div>
+
+            <!-- CARD -->
+            <div class="
+                bg-white
+                border border-borderColor
+                rounded-[32px]
+                p-8
+                shadow-soft
+                hover-lift
+                ">
+
+                <p class="
+                    text-sm
+                    font-semibold
+                    uppercase
+                    tracking-wide
+                    text-textMuted
+                    ">
+
+                    Tiempo ahorrado
+
+                </p>
+
+                <h3 class="
+                    mt-6
+                    text-5xl
+                    font-black
+                    tracking-tight
+                    text-textPrimary
+                    ">
+
+                    72%
+
+                </h3>
+
+                <p class="mt-4 text-textMuted">
+
+                    Menos trabajo manual y más productividad.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+@code {
+
+    private List<string> Companies = new()
+    {
+        "NovaTech",
+        "UrbanFlow",
+        "GreenShop",
+        "CoffeeLab",
+        "Vital+",
+        "PixelWorks"
+    };
+
+}

@@ -1,0 +1,135 @@
+﻿@using InventarioSaaS.Web.Models.Products
+@using InventarioSaaS.Web.Models.Categories
+@using InventarioSaaS.Web.Services
+
+@inject ProductService ProductService
+@inject NotificationStateService NotificationState
+@if (Open)
+{
+    <div class="
+        fixed inset-0 z-50
+        bg-black/40
+        flex justify-end">
+
+        <div class="
+            w-full sm:w-[520px]
+            h-full
+            bg-surface dark:bg-darkSurface
+            p-8
+            overflow-y-auto">
+
+            <div class="flex items-center justify-between">
+
+                <h2 class="
+                    text-2xl font-bold
+                    text-textPrimary dark:text-darkTextPrimary">
+                    Editar producto
+                </h2>
+
+                <button @onclick="Close">
+                    ✕
+                </button>
+
+            </div>
+            <div class="mt-8 space-y-5">
+
+                <input @bind="Model.Nombre"
+                       placeholder="Nombre"
+                       class="input-style" />
+
+                <input @bind="Model.PrecioVenta"
+                       type="number"
+                       placeholder="Precio"
+                       class="input-style" />
+
+                <input @bind="Model.Stock"
+                       type="number"
+                       placeholder="Stock"
+                       class="input-style" />
+
+                <!-- FOTO -->
+                <input @bind="Model.Foto"
+                       placeholder="URL de la foto"
+                       class="input-style" />
+
+                <!-- DESCRIPCION -->
+                <textarea @bind="Model.Descripcion"
+                          placeholder="Descripción"
+                          class="input-style min-h-[120px]">
+                      </textarea>
+
+                <select @bind="Model.CategoriaId"
+                        class="input-style">
+
+                    @foreach (var category in Categories)
+                    {
+                        <option value="@category.Id">
+                            @category.Nombre
+                        </option>
+                    }
+
+                </select>
+
+                <input @bind="Model.PrecioCompra"
+                       type="number"
+                       placeholder="PrecioCompra"
+                       class="input-style" />
+
+                <button @onclick="Save"
+                        class="
+                            w-full
+                            h-14
+                            rounded-2xl
+                            bg-primary
+                            text-white
+                            font-semibold">
+
+                    Guardar cambios
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter]
+    public EditProductDto Model { get; set; } = new();
+
+    [Parameter]
+    public List<CategoryDto> Categories { get; set; } = [];
+
+    [Parameter]
+    public EventCallback OnSaved { get; set; }
+
+    private async Task Save()
+    {
+        var success =
+            await ProductService.EditarProducto(
+                Model.Id,
+                Model);
+
+        NotificationState.Notify();
+        if (success)
+        {
+            await OnSaved.InvokeAsync();
+
+            await Close();
+        }
+    }
+
+    private async Task Close()
+    {
+        await OpenChanged.InvokeAsync(false);
+    }
+}

@@ -1,0 +1,77 @@
+﻿@inject NavigationManager Navigation
+<nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+
+    <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+
+        <!-- LEFT -->
+        <div class="flex items-center gap-3">
+
+            <div class="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center text-white font-bold text-lg shadow-soft">
+
+                F
+
+            </div>
+
+            <div>
+
+                <h1 class="text-lg font-bold text-gray-900 leading-none">
+                    Zentra Business
+                </h1>
+
+                <p class="text-xs text-gray-400 mt-1">
+                    SaaS Empresarial
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- CENTER -->
+        <div class="hidden lg:flex items-center gap-10 text-sm font-medium text-gray-500">
+
+            <a href="#" class="hover:text-gray-900 transition-colors">
+                Producto
+            </a>
+
+            <a href="#" class="hover:text-gray-900 transition-colors">
+                Funciones
+            </a>
+
+            <a href="#" class="hover:text-gray-900 transition-colors">
+                Precios
+            </a>
+
+            <a href="#" class="hover:text-gray-900 transition-colors">
+                Recursos
+            </a>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="flex items-center gap-4">
+
+            <button @onclick='() => Navigation.NavigateTo("/login")'
+                    class="
+                hidden sm:block
+                text-sm
+                font-medium
+                text-gray-600
+                hover:text-gray-900
+                transition-colors
+                ">
+
+                Iniciar sesión
+
+            </button>
+
+            <button class="bg-primary hover:bg-primary-dark transition-all text-white px-5 py-3 rounded-2xl text-sm font-semibold shadow-soft">
+
+                Comenzar gratis
+
+            </button>
+
+        </div>
+
+    </div>
+
+</nav>

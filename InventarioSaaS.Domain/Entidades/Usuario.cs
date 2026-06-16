@@ -17,5 +17,9 @@ namespace InventarioSaaS.Domain.Entidades
         public required Empresa Empresa { get; set; }
 
         public required string Rol { get; set; }
+
+        public List<Venta> Ventas { get; set; } = [];
+
+
     }
 }

@@ -1,0 +1,274 @@
+﻿
+@inject IJSRuntime JS
+@if (Open)
+{
+    <!-- OVERLAY -->
+    <div class="
+        fixed inset-0
+        z-[90]
+
+        bg-black/40
+
+        backdrop-blur-sm
+
+        animate-fade
+        "
+         @onclick="Close">
+    </div>
+
+    <!-- MODAL -->
+    <div class="
+        fixed
+        top-[12%]
+        left-1/2
+        -translate-x-1/2
+
+        z-[100]
+
+        w-[680px]
+
+        bg-surface
+        dark:bg-darkSurface
+
+        border
+        border-borderColor
+        dark:border-darkBorder
+
+        rounded-[32px]
+
+        shadow-2xl
+
+        overflow-hidden
+
+        animate-fade
+        ">
+
+        <!-- SEARCH -->
+        <div class="
+            h-20
+
+            flex items-center gap-4
+
+            px-6
+
+            border-b
+            border-borderColor
+            dark:border-darkBorder
+            ">
+
+            <span class="text-2xl">
+                🔍
+            </span>
+
+            <input @bind="Search"
+                   placeholder="Buscar..."
+                   class="
+            flex-1
+
+            bg-transparent
+
+            outline-none
+
+            text-lg
+
+            text-textPrimary
+            dark:text-darkTextPrimary
+            " />
+
+            <div class="
+                px-3 py-2
+
+                rounded-xl
+
+                bg-surfaceSoft
+                dark:bg-darkSurfaceSoft
+
+                text-xs
+
+                text-textMuted
+                dark:text-darkTextMuted
+                ">
+
+                ESC
+
+            </div>
+
+        </div>
+
+        <!-- RESULTS -->
+        <div class="
+            max-h-[500px]
+            overflow-auto
+
+            p-4
+
+            space-y-2
+            ">
+
+            @foreach (var item in FilteredItems)
+            {
+                <button @onclick="() => Navigate(item.Url)"
+                        class="
+                    w-full
+
+                    flex items-center gap-4
+
+                    px-5 py-4
+
+                    rounded-2xl
+
+                    hover:bg-surfaceSoft
+                    dark:hover:bg-darkSurfaceSoft
+
+                    transition-all
+                    ">
+
+                    <!-- ICON -->
+                    <div class="
+                        w-12 h-12
+
+                        rounded-2xl
+
+                        bg-primary/10
+
+                        flex items-center justify-center
+
+                        text-xl
+                        ">
+
+                        @item.Icon
+
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div class="text-left">
+
+                        <p class="
+                            font-semibold
+
+                            text-textPrimary
+                            dark:text-darkTextPrimary
+                            ">
+                            @item.Title
+                        </p>
+
+                        <p class="
+                            text-sm
+
+                            text-textMuted
+                            dark:text-darkTextMuted
+                            ">
+                            @item.Description
+                        </p>
+
+                    </div>
+
+                </button>
+            }
+
+        </div>
+
+    </div>
+}
+
+@code {
+
+    [Inject]
+    private NavigationManager Nav { get; set; } = default!;
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    private string Search = "";
+
+    private List<CommandItem> Items = new()
+    {
+        new()
+        {
+            Title = "Dashboard",
+            Description = "Ir al panel principal",
+            Url = "/dashboard",
+            Icon = "📊"
+        },
+
+        new()
+        {
+            Title = "Facturas",
+            Description = "Gestionar facturas",
+            Url = "/facturas",
+            Icon = "🧾"
+        },
+
+        new()
+        {
+            Title = "Inventario",
+            Description = "Administrar productos",
+            Url = "/inventario",
+            Icon = "📦"
+        },
+
+        new()
+        {
+            Title = "Clientes",
+            Description = "Ver clientes",
+            Url = "/clientes",
+            Icon = "👥"
+        },
+
+        new()
+        {
+            Title = "Reportes",
+            Description = "Analíticas y métricas",
+            Url = "/reportes",
+            Icon = "📈"
+        }
+    };
+
+    private IEnumerable<CommandItem> FilteredItems =>
+        Items.Where(x =>
+            x.Title.Contains(Search, StringComparison.OrdinalIgnoreCase));
+
+    private async Task Close()
+    {
+        Open = false;
+
+        await OpenChanged.InvokeAsync(false);
+    }
+
+    private async Task Navigate(string url)
+    {
+        await Close();
+
+        Nav.NavigateTo(url);
+    }
+
+    public class CommandItem
+    {
+        public string Title { get; set; } = "";
+
+        public string Description { get; set; } = "";
+
+        public string Url { get; set; } = "";
+
+        public string Icon { get; set; } = "";
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync(
+                "eval",
+            @"
+            document.addEventListener('keydown', function(e){
+                if(e.key === 'Escape'){
+                    document.dispatchEvent(new CustomEvent('close-command-palette'));
+                }
+            });
+            ");
+        }
+    }
+
+}

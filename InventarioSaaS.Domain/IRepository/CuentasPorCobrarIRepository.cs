@@ -1,4 +1,5 @@
-﻿using InventarioSaaS.Domain.Entidades;
+﻿using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace InventarioSaaS.Domain.IRepository
         Task<List<CuentasPorCobrar>> Get(int empresaId);
         Task<CuentasPorCobrar> ObtenerUno(int empresaId, int id);
         Task<string> ObtenerEmpresaId();
+        Task<PagedResponse<LeerCuentasPorCobrarReportes>> Obtener(int empresaId, CuentrasPorCobrarQuery queryparams);
     }
 }

@@ -1,4 +1,5 @@
-﻿using InventarioSaaS.Domain.Entidades;
+﻿using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace InventarioSaaS.Domain.IRepository
         Task<Pago> ObtenerPorId(int empresaId, int id);
         Task<CuentasPorCobrar> ObtenerCuentaPorCobrar(int empresaId, int cuentaId);
         Task GuardarPago(Pago pago, CuentasPorCobrar cuenta);
+        Task<PagedResponse<LeerPagoDto>> Obtener(int empresaId, PagoQuery queryparams);
     }
 }

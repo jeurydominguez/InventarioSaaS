@@ -1,4 +1,6 @@
-﻿using InventarioSaaS.Domain.Entidades;
+﻿using InventarioSaaS.Application.Domain;
+using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Infrastructure.ApplicationDbContext;
 using Microsoft.AspNetCore.Http;
@@ -54,6 +56,38 @@ namespace InventarioSaaS.Infrastructure.Repository
         {
             dbcontext.Cliente.Remove(modelo);
             await dbcontext.SaveChangesAsync();
+        }
+
+        public async Task<PagedResponse<LeerClienteDtoVenta>>Obtener(int empresaId, ClienteQuery queryparams)
+        {
+            var query = dbcontext.Cliente
+                .AsNoTracking()
+                .Where(x => x.EmpresaId == empresaId)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(queryparams.Search))
+            {
+                query = query.Where(x => x.Nombre == queryparams.Search);
+            }
+
+            if (!string.IsNullOrEmpty(queryparams.Telefono))
+            {
+                query = query.Where(x => x.NumeroTelefono == queryparams.Telefono);
+            }
+
+            var resultado = query
+                .OrderBy(x => x.Nombre)
+                .Select(x => new LeerClienteDtoVenta
+                {
+                    Id = x.Id,
+                    Nombre = x.Nombre,
+                    NumeroTelefono = x.NumeroTelefono,
+                    Direccion = x.Direccion
+                });
+
+            return await resultado.PaginateAsync(
+                queryparams.Page,
+                queryparams.PageSize);
         }
     }
 }

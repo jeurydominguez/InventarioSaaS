@@ -1,4 +1,5 @@
-﻿using InventarioSaaS.Domain.DTO;
+﻿using InventarioSaaS.Application.Domain;
+using InventarioSaaS.Domain.DTO;
 using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Infrastructure.ApplicationDbContext;
@@ -58,6 +59,35 @@ namespace InventarioSaaS.Infrastructure.Repository
         {
             var categoria = await context.Categoria.Where(c => c.EmpresaId == empresaId && c.Nombre == dto.Nombre && c.Descripcion == dto.Descripcion).FirstOrDefaultAsync();
             return categoria;
+        }
+
+        public async Task<PagedResponse<LeerCategoriaDto>>Obtener(int empresaId, CategoriaQuery queryparams)
+        {
+            var query = context.Categoria
+                .AsNoTracking()
+                .Where(x => x.EmpresaId == empresaId)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(queryparams.Search))
+            {
+                query = query.Where(x => x.Nombre.Contains(queryparams.Search));
+            }
+            if (!string.IsNullOrEmpty(queryparams.Descripcion))
+            {
+                query = query.Where(x => x.Descripcion.Contains(queryparams.Descripcion));
+            }
+
+            var resultado = query
+                .OrderBy(x => x.Nombre)
+                .Select(x => new LeerCategoriaDto
+                {
+                    Id = x.Id,
+                    Nombre = x.Nombre,
+                    Descripcion = x.Descripcion
+                });
+
+            return await resultado.PaginateAsync(queryparams.Page,
+                queryparams.PageSize);
         }
     }
 }

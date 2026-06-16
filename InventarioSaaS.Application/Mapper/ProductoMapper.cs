@@ -14,9 +14,12 @@ namespace InventarioSaaS.Application.Mapper
             {
                 Nombre = dto.Nombre,
                 PrecioVenta = dto.PrecioVenta,
+                PrecioCompra = dto.PrecioCompra,
                 Stock = dto.Stock,
                 EmpresaId = empresa,
-                CategoriaId = dto.CategoriaId
+                CategoriaId = dto.CategoriaId,
+                Foto = dto.Foto,
+                Descripcion = dto.Descripcion
             };
         }
 
@@ -47,8 +50,11 @@ namespace InventarioSaaS.Application.Mapper
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 PrecioVenta = producto.PrecioVenta,
+                PrecioCompra = producto.PrecioCompra,
                 Stock = producto.Stock,
-                Categoria = categoria
+                Categoria = categoria,
+                Foto = producto.Foto,
+                Descripcion = producto.Descripcion
             };
         }
 
@@ -59,8 +65,11 @@ namespace InventarioSaaS.Application.Mapper
                 Id = dto.Id,
                 Nombre = dto.Nombre,
                 PrecioVenta = dto.PrecioVenta,
+                PrecioCompra = dto.PrecioCompra,
                 Stock = dto.Stock,
-                EmpresaId = dto.EmpresaId
+                EmpresaId = dto.EmpresaId,
+                Foto = dto.Foto,
+                Descripcion = dto.Descripcion
             };
         }
 
@@ -71,9 +80,12 @@ namespace InventarioSaaS.Application.Mapper
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 PrecioVenta = producto.PrecioVenta,
+                PrecioCompra = producto.PrecioCompra,
                 Stock = producto.Stock,
                 EmpresaId = producto.EmpresaId,
-                CategoriaId = producto.CategoriaId
+                CategoriaId = producto.CategoriaId,
+                Foto = producto.Foto,
+                Descripcion = producto.Descripcion
             };
         }
     }

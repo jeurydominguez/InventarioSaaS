@@ -57,6 +57,7 @@ namespace SaasTest.pruebasUnitarias.Controllers
                 Nombre = "teclado",
                 EmpresaId = 1,
                 PrecioVenta = 500.00m,
+                PrecioCompra = 300.00m,
                 Categoria = new Categoria
                 {
                     Id = 10,

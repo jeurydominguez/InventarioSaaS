@@ -1,4 +1,5 @@
 ﻿using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Domain.IService;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +36,7 @@ namespace InventarioSaaS.API.Controllers
             return CreatedAtAction(nameof(ObtenerPorId), new { id = dto.Id }, dto);
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         [Authorize]
         public async Task<IActionResult> GetAll()
         {
@@ -67,6 +68,14 @@ namespace InventarioSaaS.API.Controllers
         {
             await service.Eliminar(id);
             return NoContent();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<PagedResponse<LeerClienteDtoVenta>>> Obtener([FromQuery]ClienteQuery query)
+        {
+            var cliente = await service.Obtener(query);
+            return Ok(cliente);
         }
     }
 }

@@ -1,0 +1,284 @@
+﻿@page "/pagos"
+@attribute [Authorize]
+@layout DashboardLayout
+@using Microsoft.AspNetCore.Authorization
+@using InventarioSaaS.Web.Models.Payments
+@using InventarioSaaS.Web.Services
+
+@inject PaymentService PaymentService
+@inject NavigationManager Nav
+
+<div class="space-y-8">
+
+    <!-- HEADER -->
+    <div>
+
+        <h1 class="
+            text-4xl
+            font-bold
+            text-textPrimary
+            dark:text-darkTextPrimary">
+
+            Pagos
+
+        </h1>
+
+        <p class="
+            mt-2
+            text-textMuted
+            dark:text-darkTextMuted">
+
+            Historial completo de pagos registrados.
+
+        </p>
+
+    </div>
+
+    <!-- SEARCH -->
+    <div class="
+        flex items-center gap-3
+        h-14
+        w-full
+        lg:w-[340px]
+        px-5
+        rounded-2xl
+        bg-surface
+        dark:bg-darkSurface
+        border
+        border-borderColor
+        dark:border-darkBorder">
+
+        🔍
+
+        <input value="@Search"
+               @oninput="SearchChanged"
+               placeholder="Buscar pago..."
+               class="
+        bg-transparent
+        outline-none
+        flex-1" />
+
+    </div>
+
+    @if (Loading)
+    {
+        <div class="
+            bg-surface
+            dark:bg-darkSurface
+            rounded-[32px]
+            p-10">
+
+            Cargando pagos...
+
+        </div>
+    }
+    else
+    {
+        <!-- TABLE -->
+        <div class="
+            overflow-hidden
+            bg-surface
+            dark:bg-darkSurface
+            border
+            border-borderColor
+            dark:border-darkBorder
+            rounded-[32px]
+            shadow-soft">
+
+            <!-- HEADER -->
+            <div class="
+                grid
+                grid-cols-[120px_1fr_1fr_1fr]
+                gap-4
+                px-8 py-5
+                border-b
+                border-borderColor
+                dark:border-darkBorder
+                text-sm
+                font-semibold
+                text-textMuted
+                dark:text-darkTextMuted">
+
+                <div>ID</div>
+                <div>Cuenta</div>
+                <div>Monto</div>
+                <div>Fecha</div>
+
+            </div>
+
+            <!-- ROWS -->
+            @foreach (var pago in Payment)
+            {
+                <button @onclick="() => GoToCuenta(pago.CuentasPorCobrarId)"
+                        class="
+                    w-full
+                    grid
+                    grid-cols-[120px_1fr_1fr_1fr]
+                    gap-4
+                    items-center
+                    px-8 py-5
+                    border-b
+                    border-borderColor
+                    dark:border-darkBorder
+
+                    hover:bg-surfaceSoft
+                    dark:hover:bg-darkSurfaceSoft
+
+                    transition-all
+                    text-left">
+
+                    <div class="font-semibold">
+                        #@pago.Id
+                    </div>
+
+                    <div>
+                        Cuenta #@pago.CuentasPorCobrarId
+                    </div>
+
+                    <div class="
+                        text-green-500
+                        font-bold">
+
+                        @pago.Monto.ToString("C")
+
+                    </div>
+
+                    <div class="
+                        text-textMuted
+                        dark:text-darkTextMuted">
+
+                        @pago.Fecha.ToString("dd/MM/yyyy")
+
+                    </div>
+
+                </button>
+            }
+
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="
+            flex
+            items-center
+            justify-between">
+
+            <button @onclick="PreviousPage"
+                    disabled="@(CurrentPage == 1)"
+                    class="
+                px-5 py-3
+                rounded-2xl
+                border
+                border-borderColor">
+
+                ← Anterior
+
+            </button>
+
+            <div class="flex items-center gap-3">
+
+                <div class="
+                    w-10 h-10
+                    rounded-xl
+                    bg-primary
+                    text-white
+                    flex
+                    items-center
+                    justify-center">
+
+                    @CurrentPage
+
+                </div>
+
+                <p>
+                    de @TotalPages
+                </p>
+
+            </div>
+
+            <button @onclick="NextPage"
+                    disabled="@(CurrentPage >= TotalPages)"
+                    class="
+                px-5 py-3
+                rounded-2xl
+                bg-primary
+                text-white">
+
+                Siguiente →
+
+            </button>
+
+        </div>
+    }
+
+</div>
+
+@code {
+
+    private List<PaymentDto> Payment = [];
+
+    private bool Loading;
+
+    private string Search = "";
+
+    private int CurrentPage = 1;
+
+    private int TotalPages = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPayments();
+    }
+
+    private async Task LoadPayments()
+    {
+        Loading = true;
+
+        var response =
+            await PaymentService.ObtenerPagos(
+                CurrentPage,
+                Search);
+
+        if (response is not null)
+        {
+            Payment = response.Data;
+
+            TotalPages = response.TotalPages;
+        }
+
+        Loading = false;
+    }
+
+    private async Task SearchChanged(ChangeEventArgs e)
+    {
+        Search = e.Value?.ToString() ?? "";
+
+        CurrentPage = 1;
+
+        await LoadPayments();
+    }
+
+    private async Task NextPage()
+    {
+        if (CurrentPage >= TotalPages)
+            return;
+
+        CurrentPage++;
+
+        await LoadPayments();
+    }
+
+    private async Task PreviousPage()
+    {
+        if (CurrentPage <= 1)
+            return;
+
+        CurrentPage--;
+
+        await LoadPayments();
+    }
+
+    private void GoToCuenta(int id)
+    {
+        Nav.NavigateTo($"/cuentas-por-cobrar/{id}");
+    }
+}

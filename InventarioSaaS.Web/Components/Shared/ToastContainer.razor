@@ -1,0 +1,30 @@
+﻿@using InventarioSaaS.Web.Services
+@inject ToastService ToastService
+@implements IDisposable
+
+<div class="
+    fixed top-6 right-6
+    z-[200]
+    w-[380px]
+    space-y-4
+    ">
+
+    @foreach (var toast in ToastService.Toasts)
+    {
+        <ToastItem Toast="toast" />
+    }
+
+</div>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        ToastService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ToastService.OnChange -= StateHasChanged;
+    }
+}

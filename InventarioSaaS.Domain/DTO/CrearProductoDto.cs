@@ -14,10 +14,16 @@ namespace InventarioSaaS.Domain.DTO
         public required decimal PrecioVenta { get; set; }
 
         [Required]
+        public required decimal PrecioCompra { get; set; }
+
+        [Required]
         public required int Stock { get; set; }
 
+        public string? Foto { get; set; }
         public int EmpresaId { get; set; }
 
         public int CategoriaId { get; set; }
+
+        public string? Descripcion { get; set; }
     }
 }

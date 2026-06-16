@@ -1,0 +1,295 @@
+﻿@using InventarioSaaS.Web.Models.Categories
+@using InventarioSaaS.Web.Services
+
+@inject CategoryService CategoryService
+@inject NotificationStateService NotificationState
+
+@if (Open)
+{
+    <!-- OVERLAY -->
+    <div class="
+        fixed inset-0
+        z-40
+        bg-black/40
+        backdrop-blur-sm"
+         @onclick="Close">
+    </div>
+
+    <!-- DRAWER -->
+    <div class="
+        fixed
+        top-0
+        right-0
+        z-50
+
+        h-screen
+        w-full
+        sm:w-[520px]
+
+        bg-surface
+        dark:bg-darkSurface
+
+        border-l
+        border-borderColor
+        dark:border-darkBorder
+
+        shadow-2xl
+
+        flex
+        flex-col">
+
+        <!-- HEADER -->
+        <div class="
+            px-8 py-6
+
+            border-b
+            border-borderColor
+            dark:border-darkBorder">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="
+                        text-3xl
+                        font-bold
+                        text-textPrimary
+                        dark:text-darkTextPrimary">
+
+                        @(IsEditing
+                            ? "Editar categoría"
+                            : "Nueva categoría")
+
+                    </h2>
+
+                    <p class="
+                        mt-2
+                        text-textMuted
+                        dark:text-darkTextMuted">
+
+                        Gestiona categorías del inventario.
+
+                    </p>
+
+                </div>
+
+                <button @onclick="Close"
+                        class="
+                    w-12 h-12
+                    rounded-2xl
+
+                    hover:bg-surfaceSoft
+                    dark:hover:bg-darkSurfaceSoft">
+
+                    ✕
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="
+            flex-1
+            overflow-auto
+
+            px-8 py-8
+
+            space-y-6">
+
+            <!-- NOMBRE -->
+            <div>
+
+                <label class="
+                    block
+                    mb-3
+
+                    text-sm
+                    font-semibold">
+
+                    Nombre
+
+                </label>
+
+                <input @bind="Nombre"
+                       class="
+                w-full
+                h-14
+
+                px-5
+
+                rounded-2xl
+
+                bg-surfaceSoft
+                dark:bg-darkSurfaceSoft
+
+                border
+                border-borderColor
+                dark:border-darkBorder
+
+                outline-none
+
+                focus:border-primary" />
+
+            </div>
+
+            <!-- DESCRIPCION -->
+            <div>
+
+                <label class="
+                    block
+                    mb-3
+
+                    text-sm
+                    font-semibold">
+
+                    Descripción
+
+                </label>
+
+                <textarea @bind="Descripcion"
+                          rows="5"
+                          class="
+                w-full
+
+                px-5 py-4
+
+                rounded-2xl
+
+                bg-surfaceSoft
+                dark:bg-darkSurfaceSoft
+
+                border
+                border-borderColor
+                dark:border-darkBorder
+
+                outline-none
+
+                focus:border-primary">
+            </textarea>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="
+        px-8 py-6
+
+        border-t
+        border-borderColor
+        dark:border-darkBorder
+
+        flex justify-end gap-4">
+
+        <button @onclick="Close"
+                class="
+            h-14
+            px-6
+
+            rounded-2xl
+
+            bg-surfaceSoft
+            dark:bg-darkSurfaceSoft">
+
+            Cancelar
+
+        </button>
+
+        <button @onclick="Save"
+                class="
+            h-14
+            px-7
+
+            rounded-2xl
+
+            bg-primary
+
+            text-white
+            font-semibold">
+
+            Guardar
+
+        </button>
+
+    </div>
+
+</div>
+}
+
+@code {
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter]
+    public bool IsEditing { get; set; }
+
+    [Parameter]
+    public CreateCategoryDto CreateModel { get; set; } = new();
+
+    [Parameter]
+    public EditCategoryDto EditModel { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnSaved { get; set; }
+
+    private string Nombre = string.Empty;
+
+    private string Descripcion = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        if (IsEditing)
+        {
+            Nombre = EditModel.Nombre;
+            Descripcion = EditModel.Descripcion;
+        }
+        else
+        {
+            Nombre = CreateModel.Nombre;
+            Descripcion = CreateModel.Descripcion;
+        }
+    }
+
+    private async Task Save()
+    {
+        bool success;
+
+        if (IsEditing)
+        {
+            EditModel.Nombre = Nombre;
+            EditModel.Descripcion = Descripcion;
+
+            success =
+                await CategoryService.Editar(EditModel);
+            NotificationState.Notify();
+        }
+        else
+        {
+            CreateModel.Nombre = Nombre;
+            CreateModel.Descripcion = Descripcion;
+
+            success =
+                await CategoryService.Crear(CreateModel);
+            NotificationState.Notify();
+        }
+
+        if (success)
+        {
+            await OnSaved.InvokeAsync();
+
+            await Close();
+        }
+    }
+
+    private async Task Close()
+    {
+        await OpenChanged.InvokeAsync(false);
+    }
+
+}

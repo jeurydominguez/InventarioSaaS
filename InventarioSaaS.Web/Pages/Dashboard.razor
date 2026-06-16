@@ -1,0 +1,114 @@
+﻿@page "/dashboard"
+@attribute [Authorize(Roles = "CEO")]
+@using InventarioSaaS.Web.Components.Dashboard
+@using InventarioSaaS.Web.Components.Invoices
+@using InventarioSaaS.Web.Services
+@using Microsoft.AspNetCore.Authorization
+@layout DashboardLayout
+
+@inject ToastService ToastService
+
+<div class="space-y-8 animate-fade-up">
+
+    @if (Loading)
+    {
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+
+        </div>
+    }
+    else
+    {
+        <!-- PAGE HEADER -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+            <div>
+
+                <h1 class="text-3xl font-bold text-textPrimary">
+                    Dashboard
+                </h1>
+
+                <p class="text-textMuted mt-1">
+                    Bienvenido nuevamente a Zentra Business.
+                </p>
+
+            </div>
+        </div>
+
+        <!-- STATS -->
+            <div class="
+                grid
+                grid-cols-1
+                md:grid-cols-2
+                2xl:grid-cols-4
+                gap-6
+            ">
+
+                <KpiCard Title="Ventas"
+                         Value="$24,780"
+                         Trend="+12.4%"
+                         Icon="💰" />
+
+                <KpiCard Title="Facturas"
+                         Value="152"
+                         Trend="+8.1%"
+                         Icon="🧾" />
+
+                <KpiCard Title="Clientes"
+                         Value="28"
+                         Trend="+18.2%"
+                         Icon="👥" />
+
+                <KpiCard Title="Productos"
+                         Value="894"
+                         Trend="+5.4%"
+                         Icon="📦" />
+
+            </div>
+
+        <!-- GRID -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+            <!-- CHART -->
+            <RevenueChart />
+
+            <!-- ACTIVITY -->
+
+            <ActivityFeed />
+
+        </div>
+    }
+</div>
+
+<button @onclick="() => OpenQuickInvoice = true"></button>
+
+<QuickInvoiceDrawer Open="OpenQuickInvoice"
+                    OpenChanged="@(value => OpenQuickInvoice = value)" />
+
+@code {
+
+    private bool Loading = true;
+
+    private bool OpenQuickInvoice;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(2000);
+
+        Loading = false;
+    }
+
+    private void OpenInvoiceDrawer()
+    {
+        OpenQuickInvoice = true;
+
+        ToastService.ShowSuccess(
+            "Panel abierto",
+            "Puedes crear una nueva factura."
+        );
+    }
+}

@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using InventarioSaaS.Web.Services
+@inject NavigationManager Navigation
+@inject ThemeService ThemeService
+
+<CascadingAuthenticationState>
+
+    <Router AppAssembly="@typeof(App).Assembly">
+
+        <Found Context="routeData">
+
+            <AuthorizeRouteView RouteData="@routeData"
+                                DefaultLayout="@typeof(MainLayout)">
+
+                <NotAuthorized>
+
+                    <RedirectToLogin />
+
+                </NotAuthorized>
+
+            </AuthorizeRouteView>
+
+            <FocusOnNavigate RouteData="@routeData"
+                             Selector="h1" />
+
+        </Found>
+
+        <NotFound>
+
+            <LayoutView Layout="@typeof(MainLayout)">
+
+                <h1>Página no encontrada</h1>
+
+            </LayoutView>
+
+        </NotFound>
+
+    </Router>
+
+</CascadingAuthenticationState>

@@ -1,0 +1,47 @@
+﻿<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
+
+    <!-- LEFT -->
+    <div>
+
+        <h2 class="text-2xl font-bold text-textPrimary">
+            @Title
+        </h2>
+
+        <p class="text-textMuted mt-1">
+            @Subtitle
+        </p>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="flex flex-col sm:flex-row gap-3">
+
+        <!-- SEARCH -->
+        <div class="flex items-center bg-surface border border-borderColor rounded-2xl px-4 h-12 w-full sm:w-80">
+
+            <input type="text"
+                   placeholder="Buscar..."
+                   class="bg-transparent outline-none border-none w-full text-sm text-textPrimary placeholder:text-textMuted" />
+
+        </div>
+
+        <!-- BUTTON -->
+        <AppButton>
+            @ButtonText
+        </AppButton>
+
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Subtitle { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ButtonText { get; set; } = "Nuevo";
+}

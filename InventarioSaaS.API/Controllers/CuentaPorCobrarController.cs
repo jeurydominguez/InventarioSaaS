@@ -1,4 +1,6 @@
-﻿using InventarioSaaS.Domain.IService;
+﻿using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
+using InventarioSaaS.Domain.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +16,7 @@ namespace InventarioSaaS.API.Controllers
         {
             this.service = service;
         }
-        [HttpGet]
+        [HttpGet("all")]
         [Authorize]
         public async Task<IActionResult> Get()
         {
@@ -23,10 +25,19 @@ namespace InventarioSaaS.API.Controllers
         }
 
         [HttpGet("{Id:int}")]
+        [Authorize]
         public async Task<IActionResult> Get(int Id)
         {
             var cuenta = await service.Obtener(Id);
             return Ok(cuenta);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<PagedResponse<LeerCuentasPorCobrarReportes>>> Obtener([FromQuery]CuentrasPorCobrarQuery query)
+        {
+            var cuentas = await service.ObtenerP(query);
+            return Ok(cuentas);
         }
     }
 }

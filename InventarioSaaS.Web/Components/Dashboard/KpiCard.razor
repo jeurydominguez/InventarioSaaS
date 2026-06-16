@@ -1,0 +1,146 @@
+﻿<div class="
+    relative
+    overflow-hidden
+
+    bg-surface
+    dark:bg-darkSurface
+
+    border
+    border-borderColor
+    dark:border-darkBorder
+
+    rounded-[32px]
+
+    p-7
+
+    shadow-soft
+
+    hover:shadow-glow
+    hover:-translate-y-1
+
+    transition-all
+    duration-300
+    ">
+
+    <!-- GLOW -->
+    <div class="
+        absolute
+        top-0
+        right-0
+
+        w-40 h-40
+
+        bg-primary/10
+
+        rounded-full
+
+        blur-3xl
+        ">
+    </div>
+
+    <!-- TOP -->
+    <div class="flex items-start justify-between">
+
+        <div>
+
+            <p class="
+                text-sm
+                font-medium
+                text-textMuted
+                dark:text-darkTextMuted
+                ">
+                @Title
+            </p>
+
+            <h3 class="
+                mt-4
+                text-4xl
+                font-bold
+                tracking-tight
+
+                text-textPrimary
+                dark:text-darkTextPrimary
+                ">
+                @Value
+            </h3>
+
+        </div>
+
+        <!-- ICON -->
+        <div class="
+            w-14 h-14
+            rounded-2xl
+
+            bg-gradient-to-br
+            from-primary
+            to-indigo-400
+
+            flex items-center justify-center
+
+            text-2xl
+            text-white
+
+            shadow-glow
+            ">
+
+            @Icon
+
+        </div>
+
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="mt-8 flex items-center justify-between">
+
+        <!-- TREND -->
+        <div class="
+            inline-flex
+            items-center
+            gap-2
+
+            px-3 py-2
+
+            rounded-xl
+
+            bg-green-50
+            dark:bg-green-500/10
+
+            text-green-600
+            dark:text-green-400
+
+            text-sm
+            font-semibold
+            ">
+
+            ↗ @Trend
+
+        </div>
+
+        <!-- DESCRIPTION -->
+        <p class="
+            text-sm
+            text-textMuted
+            dark:text-darkTextMuted
+            ">
+            vs mes anterior
+        </p>
+
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; } = "";
+
+    [Parameter]
+    public string Value { get; set; } = "";
+
+    [Parameter]
+    public string Trend { get; set; } = "";
+
+    [Parameter]
+    public string Icon { get; set; } = "";
+
+}

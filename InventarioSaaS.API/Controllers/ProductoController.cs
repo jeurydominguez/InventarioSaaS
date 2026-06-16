@@ -26,7 +26,7 @@ namespace InventarioSaaS.API.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         [Authorize]
         public async Task<IActionResult> ObtenerTodos()
         {
@@ -66,6 +66,23 @@ namespace InventarioSaaS.API.Controllers
         {
             await service.Eliminar(id);
             return NoContent();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<PagedResponse<LeerProductoDto>>> Obtener([FromQuery] ProductoQuery query)
+        {
+            var resultado = await service.Obtener(query);
+            return Ok(resultado);
+        }
+
+        [HttpGet("stats")]
+        [Authorize]
+        public async Task<ActionResult<InventarioStatsDto>> ObtenerStats()
+        {
+            var stats = await service.ObtenerStats();
+
+            return Ok(stats);
         }
     }
 }

@@ -14,5 +14,6 @@ namespace InventarioSaaS.Domain.IService
         Task<ActualizarClienteDto> Actualizar(int id);
         Task Editar(ActualizarClienteDto dto);
         Task Eliminar(int id);
+        Task<PagedResponse<LeerClienteDtoVenta>> Obtener(ClienteQuery query);
     }
 }

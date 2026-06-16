@@ -3,6 +3,7 @@ using InventarioSaaS.Domain.DTO;
 using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Domain.IService;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,13 +21,15 @@ namespace InventarioSaaS.Application.service
     {
         private readonly IUsuarioRepository repository;
         private readonly IConfiguration configuration;
-        public UsuarioService(IUsuarioRepository repository, IConfiguration configuration)
+        private readonly IEmailService emailService;
+        public UsuarioService(IUsuarioRepository repository, IConfiguration configuration, IEmailService emailService)
         {
             this.repository = repository;
             this.configuration = configuration;
+            this.emailService = emailService;
         }
 
-        public async Task<TokenDto> Registrar(RegistrarUsuarioDTO dto)
+        public async Task Registrar(RegistrarUsuarioDTO dto)
         {
             var exist = await repository.BuscarEmpresa(dto.EmpresaEmail);
             var existUser = await repository.BuscarUsuario(dto.Email);
@@ -57,9 +60,21 @@ namespace InventarioSaaS.Application.service
             var result = await repository.CrearUsuario(usuario, dto);
             if (result.Succeeded)
             {
-                // aqui creamos el JWT
-                var token = await CrearToken(dto);
-                return token;
+                var token = await repository.GenerarEmailConfirmation(usuario);
+
+                var url =
+                    $"https://localhost:7186/confirm-email" +
+                    $"?userId={usuario.Id}" +
+                    $"&token={Uri.EscapeDataString(token)}";
+                await emailService.EnviarAsync(usuario.Email!, "Confirma tu cuenta", $"""
+                    <h2>Bienvenido a Zentra Business</h2>
+
+                    <p>Haz clic en el siguiente enlace:</p>
+
+                    <a href="{url}">
+                        Confirmar correo
+                    </a>
+                    """);
             }
             else
             {
@@ -99,7 +114,8 @@ namespace InventarioSaaS.Application.service
             return new TokenDto
             {
                 Token = token,
-                Expiracion = fechaExpiracion
+                Expiracion = fechaExpiracion,
+                Role = usuario.Rol
             };
             //final del metodo , retorna el token y la expiracion , todo esta en UTCNOW por cuestion de politicas JWT
         }
@@ -110,19 +126,21 @@ namespace InventarioSaaS.Application.service
             var exist = await repository.BuscarUsuarioConEmpresa(dto.Email);
             if(exist == null)
             {
-                throw new NoContentEx("Usuario no valido");
+                throw new NoContentEx("Email no valido");
             }
 
             var result = await repository.ChekearPassword(exist, dto);
-            if (result.Succeeded)
+
+            if (!result.Succeeded)
             {
-                var paraToken = Mapper.UsuarioMapper.ARegistrarUsuarioDto(exist);
-                return await CrearToken(paraToken);
+                throw new NoContentEx("contraseña inválidos");
             }
-            else
+            if (!await repository.VerificarEmail(exist))
             {
-                throw new NoContentEx("usuario no valido");
+                throw new Exception("Debe confirmar Email");
             }
+            var paraToken = Mapper.UsuarioMapper.ARegistrarUsuarioDto(exist);
+            return await CrearToken(paraToken);
         }
 
         public async Task HacerAdmin(HacerAdminDto dto)
@@ -136,6 +154,105 @@ namespace InventarioSaaS.Application.service
             }
 
             await repository.HacerAdmin(usuario);
+        }
+
+        public async Task<UsuarioActualDto> Me()
+        {
+            var email = await repository.BuscarEmail();
+
+            var usuario = await repository.Me(email);
+
+            return usuario;
+        }
+
+        public async Task<IdentityResult> CrearUsuario(CrearUsuarioDto dto)
+        {
+            var empresaId = await repository.BuscarEmpresaId();
+            var empresa = await repository.BuscarEmpresaPorId(empresaId);
+
+            var usuario = Mapper.UsuarioMapper.AUsuarioDeCrearUsuarioDto(dto, empresa);
+            var resultado = await repository.CrearUser(usuario, dto);
+            if (resultado.Succeeded)
+            {
+                var token =
+                    await repository
+                        .GenerarEmailConfirmation(usuario);
+
+                var url =
+                    $"https://localhost:7186/confirm-email" +
+                    $"?userId={usuario.Id}" +
+                    $"&token={Uri.EscapeDataString(token)}";
+
+                await emailService.EnviarAsync(usuario.Email!, "Confirma tu cuenta", $"""
+                    <h2>Bienvenido a Zentra Business</h2>
+
+                    <p>Haz clic en el siguiente enlace:</p>
+
+                    <a href="{url}">
+                        Confirmar correo
+                    </a>
+                    """);
+            }
+            return resultado;
+
+        }
+
+        public async Task ConfirmarEmail(string userId, string token)
+        {
+            var user = await repository.BuscarUsuarioConID(userId);
+            if (user == null)
+            {
+                throw new NoContentEx("usuario no encontrado");
+            }
+
+            var resultado = await repository.ConfirmarEmail(user, token);
+            if (!resultado.Succeeded)
+            {
+                throw new NotFoundEx("Error en email");
+            }
+        }
+        public async Task ReenviarConfirmacion(string email)
+        {
+            try
+            {
+                var usuario =
+    await repository.BuscarUsuario(email);
+
+                if (usuario == null)
+                {
+                    throw new NoContentEx("Usuario no encontrado");
+                }
+
+                if (await repository.VerificarEmail(usuario))
+                {
+                    throw new Exception("El correo ya fue confirmado");
+                }
+
+                var token =
+                    await repository.GenerarEmailConfirmation(usuario);
+
+                var url =
+                    $"https://localhost:7186/confirm-email" +
+                    $"?userId={usuario.Id}" +
+                    $"&token={Uri.EscapeDataString(token)}";
+                await emailService.EnviarAsync(
+    usuario.Email!,
+    "Confirma tu cuenta",
+    $"""
+        <h2>Confirmación de correo</h2>
+
+        <p>Haz clic en el siguiente enlace:</p>
+
+        <a href="{url}">
+            Confirmar correo
+        </a>
+        """);
+            }
+            
+            catch (Exception ex)
+            {
+                throw new Exception($"Error enviando correo: {ex.Message}");
+            }
         }
     }
 }

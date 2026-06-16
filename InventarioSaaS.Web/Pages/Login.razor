@@ -1,0 +1,604 @@
+﻿@page "/login"
+@using InventarioSaaS.Web.Models.Auth
+@using InventarioSaaS.Web.Services
+
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+<div class="
+    min-h-screen
+
+    bg-[#0B1120]
+
+    flex
+    items-center
+    justify-center
+
+    overflow-hidden
+    ">
+
+    <!-- BACKGROUND -->
+    <div class="
+        absolute
+        inset-0
+
+        overflow-hidden
+        ">
+
+        <div class="
+            absolute
+
+            top-[-200px]
+            left-[-120px]
+
+            w-[500px]
+            h-[500px]
+
+            rounded-full
+
+            bg-indigo-500/20
+
+            blur-3xl
+            ">
+        </div>
+
+        <div class="
+            absolute
+
+            bottom-[-200px]
+            right-[-120px]
+
+            w-[500px]
+            h-[500px]
+
+            rounded-full
+
+            bg-blue-500/20
+
+            blur-3xl
+            ">
+        </div>
+
+    </div>
+
+    <!-- CONTAINER -->
+    <div class="
+        relative
+        z-10
+
+        w-full
+        max-w-6xl
+
+        mx-6
+
+        grid
+        lg:grid-cols-2
+
+        rounded-[40px]
+
+        overflow-hidden
+
+        border border-white/10
+
+        bg-white/5
+
+        backdrop-blur-2xl
+
+        shadow-2xl
+        ">
+
+        <!-- LEFT -->
+        <div class="
+            hidden
+            lg:flex
+
+            flex-col
+            justify-between
+
+            p-14
+
+            bg-gradient-to-br
+            from-indigo-600
+            to-indigo-400
+            ">
+
+            <!-- TOP -->
+            <div>
+
+                <div class="
+                    w-16 h-16
+
+                    rounded-3xl
+
+                    bg-white/20
+
+                    flex items-center justify-center
+
+                    text-3xl
+                    ">
+                </div>
+
+                <h1 class="
+                    mt-10
+
+                    text-5xl
+                    font-black
+
+                    leading-tight
+
+                    text-white
+                    ">
+                    Zentra Business
+                </h1>
+
+                <p class="
+                    mt-6
+
+                    text-xl
+
+                    leading-relaxed
+
+                    text-white/80
+                    ">
+                    La plataforma moderna para facturación,
+                    inventario y administración empresarial.
+                </p>
+
+            </div>
+
+            <!-- BOTTOM -->
+            <div>
+
+                <div class="
+                    p-6
+
+                    rounded-3xl
+
+                    bg-white/10
+
+                    border border-white/10
+                    ">
+
+                    <p class="
+                        text-lg
+
+                        leading-relaxed
+
+                        text-white
+                        ">
+                        “Zentra Business nos ayudó a automatizar
+                        completamente nuestras operaciones.”
+                    </p>
+
+                    <div class="
+                        mt-6
+
+                        flex
+                        items-center
+                        gap-4
+                        ">
+
+                        <div class="
+                            w-12 h-12
+
+                            rounded-2xl
+
+                            bg-white/20
+
+                            flex items-center justify-center
+
+                            font-bold
+
+                            text-white
+                            ">
+                            JD
+                        </div>
+
+                        <div>
+
+                            <p class="
+                                font-semibold
+
+                                text-white
+                                ">
+                                Jeury Dominguez
+                            </p>
+
+                            <p class="
+                                text-sm
+
+                                text-white/70
+                                ">
+                                CEO • Tech Solutions
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="
+            p-10
+            lg:p-14
+
+            bg-[#0F172A]/80
+            ">
+
+            <!-- MOBILE LOGO -->
+            <div class="lg:hidden mb-10">
+
+                <div class="
+                    w-14 h-14
+
+                    rounded-2xl
+
+                    bg-indigo-500
+
+                    flex items-center justify-center
+
+                    text-2xl
+                    ">
+                </div>
+
+            </div>
+
+            <div>
+
+                <h2 class="
+                    text-4xl
+                    font-bold
+
+                    text-white
+                    ">
+                    Bienvenido de nuevo
+                </h2>
+
+                <p class="
+                    mt-3
+
+                    text-gray-400
+                    ">
+                    Inicia sesión para continuar.
+                </p>
+
+            </div>
+
+            <!-- FORM -->
+            <div class="mt-10 space-y-6">
+
+                <!-- EMAIL -->
+                <div>
+
+                    <label class="
+                        block
+                        mb-3
+
+                        text-sm
+                        font-semibold
+
+                        text-gray-300
+                        ">
+                        Correo electrónico
+                    </label>
+
+                    <input @bind="Model.Email"
+                           placeholder="correo@empresa.com"
+                           class="
+                    w-full
+                    h-14
+
+                    px-5
+
+                    rounded-2xl
+
+                    bg-white/5
+
+                    border border-white/10
+
+                    outline-none
+
+                    text-white
+
+                    focus:border-indigo-500
+
+                    transition-all
+                    " />
+
+                </div>
+
+                <!-- PASSWORD -->
+                <div>
+
+                    <label class="
+                        block
+                        mb-3
+
+                        text-sm
+                        font-semibold
+
+                        text-gray-300
+                        ">
+                        Contraseña
+                    </label>
+
+                    <input @bind="Model.Password"
+                           type="password"
+                           placeholder="••••••••"
+                           class="
+                    w-full
+                    h-14
+
+                    px-5
+
+                    rounded-2xl
+
+                    bg-white/5
+
+                    border border-white/10
+
+                    outline-none
+
+                    text-white
+
+                    focus:border-indigo-500
+
+                    transition-all
+                    " />
+
+                </div>
+
+                <!-- OPTIONS -->
+                <div class="
+                    flex
+                    items-center
+                    justify-between
+                    ">
+
+                    <label class="
+                        flex
+                        items-center
+                        gap-3
+
+                        text-sm
+
+                        text-gray-400
+                        ">
+
+                        <input type="checkbox" />
+
+                        Recordarme
+
+                    </label>
+
+                    <button class="
+                        text-sm
+
+                        text-indigo-400
+                        hover:text-indigo-300
+                        ">
+
+                        ¿Olvidaste tu contraseña?
+
+                    </button>
+
+                </div>
+
+                <!-- LOGIN -->
+                <button @onclick="LoginUser"
+                        disabled="@Loading"
+                        class="
+                    w-full
+                    h-14
+
+                    rounded-2xl
+
+                    bg-indigo-500
+                    hover:bg-indigo-400
+
+                    disabled:opacity-50
+                    disabled:cursor-not-allowed
+
+                    text-white
+                    font-semibold
+
+                    transition-all
+                    duration-200
+
+                    shadow-lg
+                    shadow-indigo-500/20
+                    ">
+
+                    @(Loading ? "Entrando..." : "Iniciar sesión")
+
+                </button>
+
+                @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+                {
+                    <div class="
+                        p-4
+
+                        rounded-2xl
+
+                        bg-red-500/10
+                        border border-red-500/20
+
+                        text-sm
+                        text-red-400
+                        ">
+
+                        @ErrorMessage
+
+                    </div>
+                }
+                @if (MostrarReenvio)
+                {
+                    <button @onclick="ReenviarCorreo"
+                            class="
+                        mt-4
+                        text-indigo-400
+                        hover:text-indigo-300
+                        text-sm
+                        font-semibold">
+
+                        Reenviar correo de confirmación
+
+                    </button>
+                }
+                <!-- DIVIDER -->
+                <div class="
+                    flex
+                    items-center
+                    gap-4
+                    ">
+
+                    <div class="flex-1 h-px bg-white/10"></div>
+
+                    <p class="
+                        text-sm
+
+                        text-gray-500
+                        ">
+                        o continuar con
+                    </p>
+
+                    <div class="flex-1 h-px bg-white/10"></div>
+
+                </div>
+
+                <!-- SOCIAL -->
+                <div class="
+                    grid
+                    grid-cols-2
+
+                    gap-4
+                    ">
+
+                    <!-- GOOGLE -->
+                    <button class="
+                        h-14
+
+                        rounded-2xl
+
+                        border border-white/10
+
+                        bg-white/5
+                        hover:bg-white/10
+
+                        text-white
+                        font-medium
+
+                        transition-all
+                        ">
+
+                        Google
+
+                    </button>
+
+                    <!-- GITHUB -->
+                    <button class="
+                        h-14
+
+                        rounded-2xl
+
+                        border border-white/10
+
+                        bg-white/5
+                        hover:bg-white/10
+
+                        text-white
+                        font-medium
+
+                        transition-all
+                        ">
+
+                        GitHub
+
+                    </button>
+
+                </div>
+
+                <!-- FOOTER -->
+                <p class="
+                    text-center
+
+                    text-gray-500
+                    ">
+
+                    ¿No tienes cuenta?
+
+                    <span class="
+                        text-indigo-400
+                        cursor-pointer
+                        ">
+                        Crear cuenta
+                    </span>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@code{
+    private LoginRequest Model = new();
+
+    private bool Loading;
+
+    private string ErrorMessage = "";
+
+    private bool MostrarReenvio;
+
+    private async Task LoginUser()
+    {
+        Loading = true;
+
+        ErrorMessage = "";
+
+        try
+        {
+            var success =
+            await AuthService.Login(Model);
+            Navigation.NavigateTo("/facturas");
+        }
+        catch(Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            if (ex.Message.Contains("confirmar"))
+            {
+                MostrarReenvio = true;
+            }
+        }
+        finally
+        {
+            Loading = false;
+        }
+    }
+    private async Task ReenviarCorreo()
+    {
+        try
+        {
+            await AuthService.ReenviarConfirmacion(
+                Model.Email);
+
+            ErrorMessage =
+                "Se ha enviado un nuevo correo de confirmación.";
+
+            MostrarReenvio = false;
+        }
+        catch
+        {
+            ErrorMessage =
+                "No fue posible reenviar el correo.";
+        }
+    }
+}

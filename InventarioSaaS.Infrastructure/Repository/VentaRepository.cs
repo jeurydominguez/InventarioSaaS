@@ -1,4 +1,5 @@
-﻿using InventarioSaaS.Domain.DTO;
+﻿using InventarioSaaS.Application.Domain;
+using InventarioSaaS.Domain.DTO;
 using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Infrastructure.ApplicationDbContext;
@@ -84,6 +85,65 @@ namespace InventarioSaaS.Infrastructure.Repository
         {
             appDbcontext.CuentasPorCobrar.Add(cuenta);
             await appDbcontext.SaveChangesAsync();
+        }
+
+        public async Task<PagedResponse<LeerVentasDto>> ObtenerP(int empresId, VentasQuery queryparams)
+        {
+            var query = appDbcontext.Venta
+                .AsNoTracking()
+                .Include(x => x.Usuario)
+                .Include(x => x.cliente)
+                .Where(x => x.EmpresaId == empresId)
+                .AsQueryable();
+
+            if (queryparams.Fecha.HasValue)
+            {
+                query = query.Where(x =>
+                    DateOnly.FromDateTime(x.Fecha)
+                    == queryparams.Fecha.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(queryparams.QuerySeach))
+            {
+                var search =
+                    queryparams.QuerySeach.Trim().ToLower();
+
+                query = query.Where(x =>
+
+                    x.cliente.Nombre.ToLower()
+                        .Contains(search)
+
+                    ||
+
+                    x.Id.ToString()
+                        .Contains(search)
+
+                    ||
+
+                    x.Usuario.NombreCompleto.ToLower()
+                        .Contains(search)
+                );
+            }
+
+            var respuesta = query
+
+                .OrderByDescending(x => x.Fecha)
+
+                .Select(x => new LeerVentasDto
+                {
+                    Id = x.Id,
+                    Fecha = x.Fecha,
+                    clienteId = x.ClienteId,
+                    NombreCliente = x.cliente.Nombre,
+                    UsuarioId = x.UsuarioId,
+                    NombreVendedor = x.Usuario.NombreCompleto,
+                    TipoPago = x.TipoPago,
+                    Total = x.Total
+                });
+
+            return await respuesta.PaginateAsync(
+                queryparams.Page,
+                queryparams.PageSize);
         }
     }
 }

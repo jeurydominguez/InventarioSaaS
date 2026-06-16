@@ -1,0 +1,101 @@
+﻿@inject NavigationManager NavManager
+
+@inject NavigationManager NavManager
+
+<button @onclick="Navigate"
+        class="
+    group
+    relative
+    flex
+    items-center
+    gap-4
+    w-full
+    px-4
+    py-3
+    rounded-2xl
+    transition-all
+    duration-300
+
+    @(IsActive
+                ? "bg-white/10 text-white shadow-glow"
+                : "text-slate-400 hover:text-white hover:bg-white/5")
+    ">
+
+    <!-- ICON -->
+    <div class="
+        w-10 h-10
+        rounded-xl
+        flex items-center justify-center
+        text-lg
+        transition-all
+        duration-300
+
+        @(IsActive
+              ? "bg-primary text-white"
+              : "bg-white/5 group-hover:bg-white/10")
+        ">
+
+        @Icon
+
+    </div>
+
+    <!-- TEXT -->
+    <span class="font-medium text-sm tracking-wide">
+
+        @Text
+
+    </span>
+
+    @if (IsActive)
+    {
+        <div class="
+            absolute
+            right-3
+            w-2 h-2
+            rounded-full
+            bg-primary">
+        </div>
+    }
+
+</button>
+
+@code {
+
+    [Parameter]
+    public string Text { get; set; } = "";
+
+    [Parameter]
+    public string Icon { get; set; } = "";
+
+    [Parameter]
+    public string Href { get; set; } = "";
+
+    private bool IsActive =>
+        CurrentRoute == Href.TrimStart('/');
+
+    private string CurrentRoute =>
+        NavManager.ToBaseRelativePath(NavManager.Uri);
+
+    protected override void OnInitialized()
+    {
+        NavManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(
+        object? sender,
+        Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    private void Navigate()
+    {
+        NavManager.NavigateTo(Href);
+    }
+
+    public void Dispose()
+    {
+        NavManager.LocationChanged -= OnLocationChanged;
+    }
+
+}

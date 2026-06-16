@@ -15,5 +15,9 @@ namespace InventarioSaaS.Domain.IRepository
         Task<List<ProductoTop5Dto>> ProductosMasVendidos(DateTime inicio, DateTime final, int empresaId);
         Task<List<Cliente>> ClientesConDeuda(int empresaId);
         Task<EstadoCuentasDtos> EstadoDeCuentasPorCobrar(int empresaId);
+        Task<GananciaNetaDto> ObtenerGanaciaNeta(DateTime inicio, DateTime final, int empresaId);
+        Task<ReporteResumenDto> ObtenerResumen(DateTime inicio, DateTime final, int empresaId);
+        Task<List<VentaChartDto>> VentaPorRango(DateTime inicio, DateTime final, int empresaId);
+        Task<List<NotificacionDto>> ObtenerNotificaciones(int empresaId);
     }
 }

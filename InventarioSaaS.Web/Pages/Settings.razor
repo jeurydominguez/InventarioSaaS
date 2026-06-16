@@ -1,0 +1,746 @@
+﻿
+@page "/settings"
+@attribute [Authorize]
+@using InventarioSaaS.Web.Services
+@using InventarioSaaS.Web.Models.Settings
+@using InventarioSaaS.Web.Models.Auth
+@using InventarioSaaS.Web.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject SettingsService SettingsService
+@inject NotificationStateService NotificationState
+@inject UserService userService
+@inject AuthService AuthService
+@inject ReportService ReportService
+@inject NavigationManager Navigation
+@layout DashboardLayout
+
+
+<div class="space-y-8">
+
+    <!-- HEADER -->
+    <div>
+
+        <h1 class="
+            text-4xl
+            font-bold
+
+            text-textPrimary
+            dark:text-darkTextPrimary
+            ">
+            Configuración
+        </h1>
+
+        <p class="
+            mt-2
+
+            text-textMuted
+            dark:text-darkTextMuted
+            ">
+            Administra tu empresa, preferencias y seguridad.
+        </p>
+
+    </div>
+
+    <!-- TABS -->
+    <div class="
+        flex
+        items-center
+        gap-3
+
+        overflow-auto
+        ">
+
+        <button class="
+            h-12
+            px-5
+
+            rounded-2xl
+
+            bg-primary
+
+            text-white
+            font-medium
+
+            whitespace-nowrap
+            ">
+            General
+        </button>
+
+        <button class="
+            h-12
+            px-5
+
+            rounded-2xl
+
+            bg-surface
+            dark:bg-darkSurface
+
+            border
+            border-borderColor
+            dark:border-darkBorder
+
+            text-textMuted
+            dark:text-darkTextMuted
+
+            whitespace-nowrap
+            ">
+            Seguridad
+        </button>
+
+        <button class="
+            h-12
+            px-5
+
+            rounded-2xl
+
+            bg-surface
+            dark:bg-darkSurface
+
+            border
+            border-borderColor
+            dark:border-darkBorder
+
+            text-textMuted
+            dark:text-darkTextMuted
+
+            whitespace-nowrap
+            ">
+            Facturación
+        </button>
+
+        <button class="
+            h-12
+            px-5
+
+            rounded-2xl
+
+            bg-surface
+            dark:bg-darkSurface
+
+            border
+            border-borderColor
+            dark:border-darkBorder
+
+            text-textMuted
+            dark:text-darkTextMuted
+
+            whitespace-nowrap
+            ">
+            Apariencia
+        </button>
+
+    </div>
+
+    <!-- GRID -->
+    <div class="
+        grid
+        grid-cols-1
+        xl:grid-cols-3
+
+        gap-6
+        ">
+
+        <!-- LEFT -->
+        <div class="
+            xl:col-span-2
+
+            space-y-6
+            ">
+
+            <!-- COMPANY -->
+            <div class="
+                bg-surface
+                dark:bg-darkSurface
+
+                border
+                border-borderColor
+                dark:border-darkBorder
+
+                rounded-[32px]
+
+                p-8
+
+                shadow-soft
+                ">
+
+                <h3 class="
+                    text-2xl
+                    font-bold
+
+                    text-textPrimary
+                    dark:text-darkTextPrimary
+                    ">
+                    Empresa
+                </h3>
+
+                <p class="
+                    mt-2
+
+                    text-textMuted
+                    dark:text-darkTextMuted
+                    ">
+                    Personaliza la información de tu empresa.
+                </p>
+
+                <!-- LOGO -->
+                <div class="mt-8">
+
+                    <label class="
+                        block
+                        mb-4
+
+                        text-sm
+                        font-semibold
+
+                        text-textPrimary
+                        dark:text-darkTextPrimary
+                        ">
+                        Logo
+                    </label>
+
+                    <div class="
+                        flex
+                        items-center
+                        gap-6
+                        ">
+
+                        <!-- PREVIEW -->
+                        <div class="
+                            w-24 h-24
+
+                            rounded-3xl
+
+                            bg-gradient-to-br
+                            from-primary
+                            to-indigo-400
+
+                            flex items-center justify-center
+
+                            text-4xl
+                            ">
+
+                            ⚡
+
+                        </div>
+
+                        <!-- BUTTON -->
+                        <button class="
+                            h-12
+                            px-5
+
+                            rounded-2xl
+
+                            bg-surfaceSoft
+                            dark:bg-darkSurfaceSoft
+
+                            border
+                            border-borderColor
+                            dark:border-darkBorder
+
+                            font-medium
+
+                            text-textPrimary
+                            dark:text-darkTextPrimary
+                            ">
+
+                            Cambiar logo
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- FORM -->
+                <div class="
+                    mt-10
+
+                    grid
+                    grid-cols-1
+                    md:grid-cols-2
+
+                    gap-6
+                    ">
+
+                    <!-- NAME -->
+                    <div>
+
+                        <label class="
+                            block
+                            mb-3
+
+                            text-sm
+                            font-semibold
+
+                            text-textPrimary
+                            dark:text-darkTextPrimary
+                            ">
+                            Nombre empresa
+                        </label>
+
+                        <InputText @bind-Value="Empresa.Nombre"
+                                   class="
+                        w-full
+                        h-14
+                        px-5
+                        rounded-2xl
+                        bg-surfaceSoft
+                        border
+                        border-borderColor" />
+
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div>
+
+                        <label class="
+                            block
+                            mb-3
+
+                            text-sm
+                            font-semibold
+
+                            text-textPrimary
+                            dark:text-darkTextPrimary
+                            ">
+                            Correo
+                        </label>
+
+                        <InputText @bind-Value="Empresa.Email"
+                                   class="
+                        w-full
+                        h-14
+                        px-5
+                        rounded-2xl
+                        bg-surfaceSoft
+                        border
+                        border-borderColor" />
+
+                    </div>
+
+                </div>
+
+            </div>
+            <AuthorizeView Policy="admin">
+            <button @onclick="GuardarEmpresa"
+                    class="
+                mt-8
+
+                h-12
+                px-6
+
+                rounded-2xl
+
+                bg-primary
+
+                text-white
+                font-semibold">
+
+                Guardar cambios
+
+            </button>
+            </AuthorizeView>
+
+            <!-- SECURITY -->
+            <div class="
+                bg-surface
+                dark:bg-darkSurface
+
+                border
+                border-borderColor
+                dark:border-darkBorder
+
+                rounded-[32px]
+
+                p-8
+
+                shadow-soft
+                ">
+
+                <h3 class="
+                    text-2xl
+                    font-bold
+
+                    text-textPrimary
+                    dark:text-darkTextPrimary
+                    ">
+                    Seguridad
+                </h3>
+
+                <p class="
+                    mt-2
+
+                    text-textMuted
+                    dark:text-darkTextMuted
+                    ">
+                    Gestiona acceso y autenticación.
+                </p>
+
+                <div class="
+                    mt-8
+
+                    space-y-5
+                    ">
+
+                    <!-- ITEM -->
+
+                        <!-- SWITCH -->
+                        <button class="
+                            w-16 h-9
+
+                            rounded-full
+
+                            bg-primary
+
+                            flex items-center
+
+                            px-1
+                            ">
+
+                            <div class="
+                                w-7 h-7
+
+                                rounded-full
+
+                                bg-white
+
+                                ml-auto
+                                ">
+                            </div>
+
+                        </button>
+
+                    </div>
+
+                    <!-- ITEM -->
+                    <div class="
+                        flex
+                        items-center
+                        justify-between
+
+                        p-5
+
+                        rounded-2xl
+
+                        bg-surfaceSoft
+                        dark:bg-darkSurfaceSoft
+                        ">
+
+                        <div>
+
+                            <p class="
+                                font-semibold
+
+                                text-textPrimary
+                                dark:text-darkTextPrimary
+                                ">
+                                Notificaciones email
+                            </p>
+
+                            <p class="
+                                mt-1
+
+                                text-sm
+
+                                text-textMuted
+                                dark:text-darkTextMuted
+                                ">
+                                Recibe alertas importantes del sistema.
+                            </p>
+
+                        </div>
+
+                        <!-- SWITCH -->
+                        <button class="
+                            w-16 h-9
+
+                            rounded-full
+
+                            bg-gray-300
+                            dark:bg-gray-700
+
+                            flex items-center
+
+                            px-1
+                            ">
+
+                            <div class="
+                                w-7 h-7
+
+                                rounded-full
+
+                                bg-white
+                                ">
+                            </div>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    <!-- RIGHT -->
+    <div class="space-y-6">
+
+        <!-- PLAN -->
+        <div class="
+            bg-gradient-to-br
+            from-primary
+            to-indigo-400
+
+            rounded-[32px]
+
+            p-8
+
+            text-white
+
+            shadow-2xl">
+
+            <p class="text-white/80">
+                Plan actual
+            </p>
+
+            <h3 class="
+                mt-4
+                text-4xl
+                font-black">
+
+                Pro
+
+            </h3>
+
+            <p class="
+                mt-4
+                text-white/80">
+
+                Acceso completo a todas las funcionalidades.
+
+            </p>
+
+            <button class="
+                mt-8
+
+                h-12
+                px-5
+
+                rounded-2xl
+
+                bg-white/20
+                hover:bg-white/30
+
+                font-semibold
+
+                transition-all">
+
+                Gestionar plan
+
+            </button>
+
+        </div>
+
+        <!-- INFORMACIÓN DEL SISTEMA -->
+        <div class="
+            bg-surface
+            dark:bg-darkSurface
+
+            border
+            border-borderColor
+            dark:border-darkBorder
+
+            rounded-[32px]
+
+            p-8
+
+            shadow-soft">
+
+            <h3 class="
+                text-xl
+                font-bold
+
+                text-textPrimary
+                dark:text-darkTextPrimary">
+
+                Sistema
+
+            </h3>
+
+            <div class="
+                mt-6
+                space-y-4">
+
+                <div class="
+                    flex
+                    justify-between">
+
+                    <span class="text-textMuted">
+                        Versión
+                    </span>
+
+                    <span class="
+                        font-semibold
+                        text-textPrimary">
+
+                        v1.0.0
+
+                    </span>
+
+                </div>
+
+                <div class="
+                    flex
+                    justify-between">
+
+                    <span class="text-textMuted">
+                        Último acceso
+                    </span>
+
+                    <span class="
+                        font-semibold
+                        text-textPrimary">
+
+                        Hoy
+
+                    </span>
+
+                </div>
+
+                <div class="
+                    flex
+                    justify-between">
+
+                    <span class="text-textMuted">
+                        Estado
+                    </span>
+
+                    <span class="
+                        text-green-600
+                        font-semibold">
+
+                        Operativo
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ZONA PELIGROSA -->
+        <div class="
+            bg-surface
+            dark:bg-darkSurface
+
+            border
+            border-red-200
+            dark:border-red-900
+
+            rounded-[32px]
+
+            p-8">
+
+            <h3 class="
+                text-xl
+                font-bold
+
+                text-red-600">
+
+                Zona peligrosa
+
+            </h3>
+
+            <p class="
+                mt-2
+                text-sm
+                text-textMuted">
+
+                Acciones irreversibles relacionadas con tu cuenta.
+
+            </p>
+
+            <button @onclick="CerrarSesion"
+                    class="
+                mt-6
+                w-full
+                h-12
+                rounded-2xl
+                bg-red-500
+                hover:bg-red-600
+                text-white
+                font-semibold
+                transition-all">
+
+                Cerrar sesión
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+@code{
+    private EmpresaSettingsDto Empresa = new();
+    private UsuarioActualDto Usuario = new();
+    private List<NotificacionDto> Notificaciones = [];
+    private bool MostrarNotificaciones;
+    private bool OpenCommandPalette;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Empresa =
+            await SettingsService.ObtenerEmpresa();
+        Usuario =
+await AuthService.ObtenerUsuarioActual()
+?? new();
+
+        NotificationState.OnChange += RefreshNotifications;
+
+        userService.OnChange += ReloadUser;
+
+        await CargarNotificaciones();
+    }
+    private async Task CerrarSesion()
+    {
+        await AuthService.Logout();
+
+        Navigation.NavigateTo("/login", true);
+    }
+    private async Task GuardarEmpresa()
+    {
+        await SettingsService
+            .ActualizarEmpresa(Empresa);
+
+        NotificationState.Notify();
+
+        userService.Notify();
+    }
+    private async void ReloadUser()
+    {
+        Usuario =
+            await AuthService.ObtenerUsuarioActual()
+            ?? new();
+
+        await InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        NotificationState.OnChange -= RefreshNotifications;
+    }
+    private async void RefreshNotifications()
+    {
+        await CargarNotificaciones();
+
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task CargarNotificaciones()
+    {
+        Notificaciones =
+            await ReportService.ObtenerNotificaciones();
+    }
+}

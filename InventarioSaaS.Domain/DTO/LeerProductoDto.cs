@@ -14,5 +14,9 @@ namespace InventarioSaaS.Domain.DTO
 
         public int Stock { get; set; }
 
+        public int CategoriaId { get; set; }
+
+        public string? Foto { get; set; }
+
     }
 }

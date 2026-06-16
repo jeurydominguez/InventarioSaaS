@@ -1,0 +1,134 @@
+﻿@using ApexCharts
+@using InventarioSaaS.Web.Models.Reports
+
+<div class="
+    col-span-2
+
+    bg-surface
+    dark:bg-darkSurface
+
+    border
+    border-borderColor
+    dark:border-darkBorder
+
+    rounded-[32px]
+
+    p-8
+
+    shadow-soft">
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between mb-8">
+
+        <div>
+
+            <h3 class="
+                text-2xl
+                font-bold
+                text-textPrimary
+                dark:text-darkTextPrimary">
+
+                @Title
+
+            </h3>
+
+            <p class="
+                mt-1
+                text-sm
+                text-textMuted
+                dark:text-darkTextMuted">
+
+                @Subtitle
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- CHART -->
+    <ApexChart TItem="SalesChartItem"
+               Height="350"
+               Options="Options">
+
+        <ApexPointSeries TItem="SalesChartItem"
+                         Items="Items"
+                         Name="Ventas"
+                         SeriesType="SeriesType.Area"
+                         XValue="@(e => e.Label)"
+                         YValue="@(e => e.Value)" />
+
+    </ApexChart>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; } = "Ventas";
+
+    [Parameter]
+    public string Subtitle { get; set; } = "";
+
+    [Parameter]
+    public List<SalesChartItem> Items { get; set; } = [];
+
+    private ApexChartOptions<SalesChartItem> Options = new();
+
+    protected override void OnInitialized()
+    {
+        Options = new ApexChartOptions<SalesChartItem>
+        {
+            Theme = new Theme
+            {
+                Mode = Mode.Light
+            },
+
+            Chart = new Chart
+            {
+                Toolbar = new Toolbar
+                {
+                    Show = false
+                },
+
+                Zoom = new Zoom
+                {
+                    Enabled = false
+                }
+            },
+
+            Stroke = new Stroke
+            {
+                Curve = Curve.Smooth,
+                Width = 4
+            },
+
+            Grid = new Grid
+            {
+                BorderColor = "#E2E8F0"
+            },
+
+            Colors = new List<string>
+            {
+                "#635BFF"
+            },
+
+            DataLabels = new DataLabels
+            {
+                Enabled = false
+            },
+
+            Fill = new Fill
+            {
+                Type = FillType.Gradient,
+
+                Gradient = new FillGradient
+                {
+                    ShadeIntensity = 1,
+                    OpacityFrom = 0.45,
+                    OpacityTo = 0.05
+                }
+            }
+        };
+    }
+}

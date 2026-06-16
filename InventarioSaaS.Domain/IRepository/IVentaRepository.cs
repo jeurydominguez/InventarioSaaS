@@ -18,5 +18,6 @@ namespace InventarioSaaS.Domain.IRepository
         Task<List<Venta>> GetAll(int empresaId);
         Task<Venta> Obtener(int id, int empresaId);
         Task CrearCuentaPorCobrar(CuentasPorCobrar cuenta);
+        Task<PagedResponse<LeerVentasDto>> ObtenerP(int empresId, VentasQuery queryparams);
     }
 }

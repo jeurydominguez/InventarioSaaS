@@ -1,0 +1,211 @@
+﻿@using InventarioSaaS.Web.Models.Customers
+@using InventarioSaaS.Web.Services
+
+@inject CustomerService CustomerService
+@inject NotificationStateService NotificationState
+
+@if (Open)
+{
+    <div class="
+        fixed inset-0
+        z-40
+        bg-black/40"
+         @onclick="Close">
+    </div>
+
+    <div class="
+        fixed top-0 right-0
+        z-50
+        h-screen
+        w-full sm:w-[500px]
+        bg-surface
+        dark:bg-darkSurface
+        border-l
+        border-borderColor
+        dark:border-darkBorder
+        flex flex-col">
+
+        <!-- HEADER -->
+        <div class="
+            px-8 py-6
+            border-b
+            border-borderColor
+            dark:border-darkBorder">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="
+                        text-3xl
+                        font-bold
+                        text-textPrimary
+                        dark:text-darkTextPrimary">
+
+                        Editar cliente
+
+                    </h2>
+
+                    <p class="
+                        mt-2
+                        text-textMuted
+                        dark:text-darkTextMuted">
+
+                        Actualiza la información del cliente.
+
+                    </p>
+
+                </div>
+
+                <button @onclick="Close">
+                    ✕
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="
+            flex-1
+            overflow-auto
+            px-8 py-8
+            space-y-6">
+
+            <!-- NOMBRE -->
+            <div>
+
+                <label class="block mb-2">
+                    Nombre
+                </label>
+
+                <input @bind="Model.Nombre"
+                       class="
+                w-full
+                h-14
+                px-5
+                rounded-2xl
+                bg-surfaceSoft
+                dark:bg-darkSurfaceSoft
+                border
+                border-borderColor
+                dark:border-darkBorder" />
+
+            </div>
+
+            <!-- TELEFONO -->
+            <div>
+
+                <label class="block mb-2">
+                    Teléfono
+                </label>
+
+                <input @bind="Model.NumeroTelefono"
+                       class="
+                w-full
+                h-14
+                px-5
+                rounded-2xl
+                bg-surfaceSoft
+                dark:bg-darkSurfaceSoft
+                border
+                border-borderColor
+                dark:border-darkBorder" />
+
+            </div>
+
+            <!-- DIRECCION -->
+            <div>
+
+                <label class="block mb-2">
+                    Dirección
+                </label>
+
+                <textarea @bind="Model.Direccion"
+                          rows="4"
+                          class="
+                w-full
+                px-5 py-4
+                rounded-2xl
+                bg-surfaceSoft
+                dark:bg-darkSurfaceSoft
+                border
+                border-borderColor
+                dark:border-darkBorder">
+            </textarea>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="
+        px-8 py-6
+        border-t
+        border-borderColor
+        dark:border-darkBorder
+        flex justify-end gap-4">
+
+        <button @onclick="Close"
+                class="
+            h-14 px-6
+            rounded-2xl
+            bg-surfaceSoft
+            dark:bg-darkSurfaceSoft">
+
+            Cancelar
+
+        </button>
+
+        <button @onclick="Save"
+                class="
+            h-14 px-7
+            rounded-2xl
+            bg-primary
+            text-white
+            font-semibold">
+
+            Guardar cambios
+
+        </button>
+
+    </div>
+
+</div>
+}
+
+@code {
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter]
+    public UpdateCustomerDto Model { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnSaved { get; set; }
+
+    private async Task Save()
+    {
+        var success =
+            await CustomerService
+                .EditarCliente(Model);
+        NotificationState.Notify();
+
+        if (success)
+        {
+            await OnSaved.InvokeAsync();
+
+            await Close();
+        }
+    }
+
+    private async Task Close()
+    {
+        await OpenChanged.InvokeAsync(false);
+    }
+
+}

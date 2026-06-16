@@ -9,5 +9,7 @@ namespace InventarioSaaS.Domain.DTO
         public required string Token { get; set; }
 
         public required DateTime Expiracion { get; set; }
+
+        public required string Role { get; set; }
     }
 }

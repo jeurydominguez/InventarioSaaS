@@ -1,0 +1,513 @@
+﻿@page "/reportes"
+@attribute [Authorize(Policy = "admin")]
+@layout DashboardLayout
+@using InventarioSaaS.Web.Models.Reports
+@using InventarioSaaS.Web.Services
+@using Microsoft.AspNetCore.Authorization
+
+@inject ReportService ReportService
+
+<div class="space-y-8">
+
+    <!-- HEADER -->
+    <div class="
+        flex
+        flex-col
+        lg:flex-row
+        lg:items-center
+        lg:justify-between
+
+        gap-6
+        ">
+
+        <!-- LEFT -->
+        <div>
+
+            <h1 class="
+                text-4xl
+                font-bold
+
+                text-textPrimary
+                dark:text-darkTextPrimary
+                ">
+                Reportes
+            </h1>
+
+            <p class="
+                mt-2
+
+                text-textMuted
+                dark:text-darkTextMuted
+                ">
+                Analíticas y métricas financieras en tiempo real.
+            </p>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="flex items-center gap-4">
+
+            <!-- DATE -->
+            <button class="
+                h-14
+                px-5
+
+                rounded-2xl
+
+                bg-surface
+                dark:bg-darkSurface
+
+                border
+                border-borderColor
+                dark:border-darkBorder
+
+                text-textMuted
+                dark:text-darkTextMuted
+
+                font-medium
+                ">
+
+                Mayo 2026
+
+            </button>
+
+            <!-- EXPORT -->
+            <button class="
+                h-14
+                px-6
+
+                rounded-2xl
+
+                bg-primary
+                hover:bg-primary-dark
+
+                text-white
+                font-semibold
+
+                transition-all
+                hover:scale-105
+
+                shadow-glow
+                ">
+
+                Exportar reporte
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- KPI -->
+    <div class="
+        grid
+        grid-cols-1
+        sm:grid-cols-2
+        xl:grid-cols-4
+
+        gap-6
+        ">
+
+        <!-- CARD -->
+        <div class="
+            bg-surface
+            dark:bg-darkSurface
+
+            border
+            border-borderColor
+            dark:border-darkBorder
+
+            rounded-[32px]
+
+            p-6
+
+            shadow-soft
+            ">
+
+            <div class="flex items-center justify-between">
+
+                <p class="
+                    text-sm
+
+                    text-textMuted
+                    dark:text-darkTextMuted
+                    ">
+                    Ingresos
+                </p>
+
+                <div class="
+                    w-12 h-12
+
+                    rounded-2xl
+
+                    bg-green-500/10
+
+                    flex items-center justify-center
+
+                    text-2xl
+                    ">
+                    💰
+                </div>
+
+            </div>
+
+            <h3 class="
+                mt-6
+
+                text-4xl
+                font-bold
+
+                text-textPrimary
+                dark:text-darkTextPrimary
+                ">
+                @Resumen.Ingresos.ToString("C")
+            </h3>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="
+            bg-surface
+            dark:bg-darkSurface
+
+            border
+            border-borderColor
+            dark:border-darkBorder
+
+            rounded-[32px]
+
+            p-6
+
+            shadow-soft
+            ">
+
+            <div class="flex items-center justify-between">
+
+                <p class="
+                    text-sm
+
+                    text-textMuted
+                    dark:text-darkTextMuted
+                    ">
+                    Facturas
+                </p>
+
+                <div class="
+                    w-12 h-12
+
+                    rounded-2xl
+
+                    bg-indigo-500/10
+
+                    flex items-center justify-center
+
+                    text-2xl
+                    ">
+                    🧾
+                </div>
+
+            </div>
+
+            <h3 class="
+                mt-6
+
+                text-4xl
+                font-bold
+
+                text-textPrimary
+                dark:text-darkTextPrimary
+                ">
+                @Resumen.Facturas
+            </h3>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="
+            bg-surface
+            dark:bg-darkSurface
+
+            border
+            border-borderColor
+            dark:border-darkBorder
+
+            rounded-[32px]
+
+            p-6
+
+            shadow-soft
+            ">
+
+            <div class="flex items-center justify-between">
+
+                <p class="
+                    text-sm
+
+                    text-textMuted
+                    dark:text-darkTextMuted
+                    ">
+                    Clientes
+                </p>
+
+                <div class="
+                    w-12 h-12
+
+                    rounded-2xl
+
+                    bg-blue-500/10
+
+                    flex items-center justify-center
+
+                    text-2xl
+                    ">
+                    👥
+                </div>
+
+            </div>
+
+            <h3 class="
+                mt-6
+
+                text-4xl
+                font-bold
+
+                text-textPrimary
+                dark:text-darkTextPrimary
+                ">
+                @Resumen.Clientes
+            </h3>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="
+            bg-surface
+            dark:bg-darkSurface
+
+            border
+            border-borderColor
+            dark:border-darkBorder
+
+            rounded-[32px]
+
+            p-6
+
+            shadow-soft
+            ">
+
+            <div class="flex items-center justify-between">
+
+                <p class="
+                    text-sm
+
+                    text-textMuted
+                    dark:text-darkTextMuted
+                    ">
+                    Conversión
+                </p>
+
+                <div class="
+                    w-12 h-12
+
+                    rounded-2xl
+
+                    bg-orange-500/10
+
+                    flex items-center justify-center
+
+                    text-2xl
+                    ">
+                    📈
+                </div>
+
+            </div>
+
+            <h3 class="
+                mt-6
+
+                text-4xl
+                font-bold
+
+                text-textPrimary
+                dark:text-darkTextPrimary
+                ">
+                @Resumen.Conversion.ToString("0.0")%
+            </h3>
+
+        </div>
+
+    </div>
+
+    <!-- DEBUG -->
+    <div class="mt-10">
+
+        @foreach (var item in Ventas)
+        {
+            <p>@item.Label - @item.Total</p>
+        }
+
+    </div>
+
+
+        <!-- SIDE -->
+        <div class="space-y-6">
+
+            <!-- TOP PRODUCTS -->
+            <div class="
+                mt-6
+                space-y-5">
+
+                @if (TopProducts.Count == 0)
+                {
+                    <div class="
+                        text-center
+                        py-10
+                        text-textMuted
+                        dark:text-darkTextMuted">
+
+                        No hay ventas todavía.
+
+                    </div>
+                }
+                else
+                {
+                    @foreach (var item in TopProducts)
+                    {
+                        <div class="
+                            flex
+                            items-center
+                            justify-between">
+
+                            <div class="flex items-center gap-4">
+
+                                <div class="
+                                    w-12 h-12
+                                    rounded-2xl
+                                    bg-primary/10
+                                    flex items-center justify-center
+                                    text-xl">
+
+                                    📦
+
+                                </div>
+
+                                <div>
+
+                                    <p class="
+                                        font-semibold
+                                        text-textPrimary
+                                        dark:text-darkTextPrimary">
+
+                                        @item.Nombre
+
+                                    </p>
+
+                                    <p class="
+                                        text-sm
+                                        text-textMuted
+                                        dark:text-darkTextMuted">
+
+                                        @item.CantidadVendida ventas
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <div class="
+                                px-4 py-2
+                                rounded-xl
+                                bg-primary/10
+                                text-primary
+                                font-bold">
+
+                                TOP
+
+                            </div>
+
+                        </div>
+                    }
+                }
+
+            </div>
+
+            <!-- SUMMARY -->
+            <div class="
+                bg-gradient-to-br
+                from-primary
+                to-indigo-400
+
+                rounded-[32px]
+
+                p-8
+
+                text-white
+
+                shadow-2xl
+                ">
+
+                <p class="text-white/80">
+                    Ganancia neta
+                </p>
+
+                <h3 class="
+                    mt-4
+
+                    text-5xl
+                    font-black
+                    ">
+                    @(Profit?.GananciaNeta.ToString("C"))
+                </h3>
+
+                <p class="
+                    mt-4
+
+                    text-white/80
+                    ">
+                    Basado en ingresos y gastos del mes actual.
+                </p>
+
+            </div>
+
+        </div>
+</div>
+@code {
+    private List<VentasChartDto> Ventas = [];
+    private ReporteResumenDto Resumen = new();
+    private NetProfitDto? Profit;
+    private List<TopProductDto> TopProducts = [];
+    private DateTime Inicio = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+    private DateTime Final = DateTime.Today;
+    protected override async Task OnInitializedAsync()
+    {
+        var inicio =
+            DateTime.UtcNow.AddMonths(-1);
+
+        var final =
+            DateTime.UtcNow;
+
+        TopProducts =
+            await ReportService
+                .ObtenerProductosTop(
+                    inicio,
+                    final)
+            ?? [];
+        Profit =
+await ReportService
+    .ObtenerGananciaNeta(
+        inicio,
+        final);
+        Resumen = await ReportService.ObtenerResumen(inicio, final);
+    }
+    public class TopProduct
+    {
+        public string Name { get; set; } = "";
+
+        public int Sales { get; set; }
+
+        public string Revenue { get; set; } = "";
+
+        public string Icon { get; set; } = "";
+    }
+}

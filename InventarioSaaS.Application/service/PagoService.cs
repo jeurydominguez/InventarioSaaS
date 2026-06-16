@@ -79,5 +79,16 @@ namespace InventarioSaaS.Application.service
                 cuenta.Estado = TipoPago.Estado.Pagado;
             }
         }
+
+        public async Task<PagedResponse<LeerPagoDto>>Obtener(PagoQuery query)
+        {
+            var empresaId = await repository.ObtenerEmpresaId();
+            if (empresaId == null)
+            {
+                throw new NoContentEx("Credenciales no validas");
+            }
+            var pagos = await repository.Obtener(empresaId, query);
+            return pagos;
+        }
     }
 }

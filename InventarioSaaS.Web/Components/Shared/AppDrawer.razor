@@ -1,0 +1,95 @@
+﻿@if (Open)
+{
+    <!-- OVERLAY -->
+    <div class="fixed inset-0 bg-black/30 glass-effect backdrop-blur-sm z-40"
+         @onclick="Close">
+    </div>
+
+    <!-- DRAWER -->
+    <div class="
+        fixed top-0 right-0
+        h-full w-full sm:w-[520px]
+        bg-surface
+        z-50
+        shadow-2xl
+        flex flex-col
+        animate-slide-in
+        ">
+
+        <!-- HEADER -->
+        <div class="h-24 px-8 border-b border-borderColor flex items-center justify-between">
+
+            <div>
+
+                <h2 class="text-2xl font-bold text-textPrimary">
+                    @Title
+                </h2>
+
+                <p class="text-sm text-textMuted mt-1">
+                    @Subtitle
+                </p>
+
+            </div>
+
+            <button class="
+                w-11 h-11
+                rounded-2xl
+                border border-borderColor
+                hover:bg-surfaceSoft
+                transition-all
+                "
+                    @onclick="Close">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="flex-1 overflow-auto p-8">
+
+            @ChildContent
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="p-8 border-t border-borderColor flex justify-end gap-4">
+
+            <AppButton Variant="secondary">
+                Cancelar
+            </AppButton>
+
+            <AppButton>
+                Guardar
+            </AppButton>
+
+        </div>
+
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Subtitle { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private async Task Close()
+    {
+        Open = false;
+
+        await OpenChanged.InvokeAsync(Open);
+    }
+}

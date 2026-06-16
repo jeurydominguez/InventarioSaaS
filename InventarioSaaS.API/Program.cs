@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Resend;
 
 var builder = WebApplication.CreateBuilder(args);
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
@@ -43,6 +44,8 @@ builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IReportesRepository, ReportesRepository>();
 builder.Services.AddScoped<IReporteService, ReportesService>();
+builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
 
 //configuracion del JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -64,7 +67,25 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazor", policy =>
+    {
+        policy.WithOrigins("https://localhost:7186")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddAuthorization(option => option.AddPolicy("admin", politica => politica.RequireClaim("rol", "admin")));
+
+builder.Services.Configure<ResendClientOptions>(
+    o =>
+    {
+        o.ApiToken = builder.Configuration["Resend:ApiKey"]!;
+    });
+builder.Services.AddHttpClient<ResendClient>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddSwaggerGen();
 
@@ -82,6 +103,8 @@ if (app.Environment.IsProduction())
 }
 
 app.UseMiddleware<MiddlewareEx>();
+
+app.UseCors("AllowBlazor");
 
 app.UseAuthentication();
 

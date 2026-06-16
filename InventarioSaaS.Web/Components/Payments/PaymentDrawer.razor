@@ -1,0 +1,194 @@
+﻿@using InventarioSaaS.Web.Models.Payments
+@using InventarioSaaS.Web.Services
+@inject NotificationStateService NotificationState
+@inject PaymentService PaymentService
+
+@if (Open)
+{
+    <!-- OVERLAY -->
+    <div class="
+        fixed inset-0
+        bg-black/40
+        backdrop-blur-sm
+        z-40"
+         @onclick="CloseDrawer">
+    </div>
+
+    <!-- DRAWER -->
+    <div class="
+        fixed
+        top-0
+        right-0
+        z-50
+        h-screen
+        w-full
+        sm:w-[500px]
+        bg-surface
+        dark:bg-darkSurface
+        border-l
+        border-borderColor
+        dark:border-darkBorder
+        shadow-2xl
+        flex
+        flex-col">
+
+        <!-- HEADER -->
+        <div class="
+            px-8 py-6
+            border-b
+            border-borderColor
+            dark:border-darkBorder">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="
+                        text-3xl
+                        font-bold">
+
+                        Registrar pago
+
+                    </h2>
+
+                    <p class="
+                        mt-2
+                        text-textMuted
+                        dark:text-darkTextMuted">
+
+                        Registra un abono a la cuenta.
+
+                    </p>
+
+                </div>
+
+                <button @onclick="CloseDrawer">
+                    ✕
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="
+            flex-1
+            overflow-auto
+            px-8 py-8
+            space-y-6">
+
+            <div>
+
+                <label class="block mb-3 font-semibold">
+                    Monto
+                </label>
+
+                <InputNumber @bind-Value="Model.Monto"
+                             class="
+                w-full
+                h-14
+                px-5
+                rounded-2xl
+                bg-surfaceSoft
+                dark:bg-darkSurfaceSoft" />
+
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Error))
+            {
+                <div class="
+                    p-4
+                    rounded-2xl
+                    bg-red-500/10
+                    text-red-500">
+
+                    @Error
+
+                </div>
+            }
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="
+            px-8 py-6
+            border-t
+            border-borderColor
+            dark:border-darkBorder
+            flex justify-end gap-4">
+
+            <button @onclick="CloseDrawer"
+                    class="
+                px-6 py-3
+                rounded-2xl
+                bg-surfaceSoft">
+
+                Cancelar
+
+            </button>
+
+            <button @onclick="Save"
+                    class="
+                px-6 py-3
+                rounded-2xl
+                bg-primary
+                text-white">
+
+                Guardar pago
+
+            </button>
+
+        </div>
+
+    </div>
+}
+
+@code {
+
+    private CreatePaymentDto Model = new();
+
+    private string Error = "";
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter]
+    public int CuentaId { get; set; }
+
+    [Parameter]
+    public EventCallback OnSaved { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Model.CuentaPorCobrarId = CuentaId;
+    }
+
+    private async Task Save()
+    {
+        var result =
+            await PaymentService.CrearPago(Model);
+        NotificationState.Notify();
+
+        if (!result.Success)
+        {
+            Error = result.Message;
+            return;
+        }
+
+        await OnSaved.InvokeAsync();
+
+        await CloseDrawer();
+    }
+
+    private async Task CloseDrawer()
+    {
+        Model = new();
+
+        Error = "";
+
+        await OpenChanged.InvokeAsync(false);
+    }
+}

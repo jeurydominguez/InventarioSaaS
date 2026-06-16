@@ -21,7 +21,11 @@ namespace InventarioSaaS.Application.Mapper
                     Total = modelo.Total,
                     TipoPago = modelo.TipoPago,
                     clienteId = modelo.ClienteId,
-                    UsuarioId = modelo.UsuarioId
+                    NombreCliente = modelo.cliente != null ? modelo.cliente.Nombre : "Cliente General",
+                    UsuarioId = modelo.UsuarioId,
+                    NombreVendedor = modelo.Usuario != null
+            ? modelo.Usuario.NombreCompleto
+            : "Sin vendedor",
                 };
                 dtos.Add(dto);
             }

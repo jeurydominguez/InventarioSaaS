@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazor-ApexCharts" Version="6.1.0" />
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.8" PrivateAssets="all" />
+    <PackageReference Include="MudBlazor" Version="9.4.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
+    <PackageReference Include="Unity" Version="5.11.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Charts\" />
+    <Folder Include="Components\Buttons\" />
+    <Folder Include="Layout\AuthLayout\" />
+    <Folder Include="Assets\" />
+    <Folder Include="Pages\Landing\" />
+    <Folder Include="States\" />
+    <Folder Include="Styles\" />
+    <Folder Include="wwwroot\build\" />
+    <Folder Include="wwwroot\css\build\" />
+    <Folder Include="wwwroot\lib\bootstrap\dist\css\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\globals.css" />
+  </ItemGroup>
+
+</Project>

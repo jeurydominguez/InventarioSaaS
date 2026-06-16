@@ -1,5 +1,6 @@
 ﻿using InventarioSaaS.Application.EX;
 using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Domain.IService;
 using System;
@@ -77,6 +78,17 @@ namespace InventarioSaaS.Application.service
                 throw new NoContentEx("Categoria No encontrada");
             }
             await repository.Eliminar(categoria);
+        }
+
+        public async Task<PagedResponse<LeerCategoriaDto>>Obtener(CategoriaQuery query)
+        {
+            var empresa = await repository.BuscarEmpresa();
+            if (empresa == null)
+            {
+                throw new NoContentEx("empresa invalida");
+            }
+            var categoria = await repository.Obtener(empresa, query);
+            return categoria;
         }
     }
 }

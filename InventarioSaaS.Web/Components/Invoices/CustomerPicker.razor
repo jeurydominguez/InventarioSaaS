@@ -1,0 +1,167 @@
+﻿@using InventarioSaaS.Web.Models.Customers
+@using InventarioSaaS.Web.Services
+
+@inject CustomerService CustomerService
+
+<div class="space-y-3">
+
+    <!-- SEARCH -->
+    <input @bind="Search"
+           @bind:event="oninput"
+           placeholder="Buscar cliente..."
+           class="
+    w-full
+    h-14
+    px-5
+    rounded-2xl
+    bg-surfaceSoft
+    dark:bg-darkSurfaceSoft" />
+
+    <!-- LIST -->
+    <div class="
+        max-h-[250px]
+        overflow-auto
+        space-y-2">
+
+        <!-- FINAL CONSUMER -->
+        <button type="button"
+                @onclick="ClearCustomer"
+                class="
+            w-full
+            p-4
+            rounded-2xl
+            bg-surfaceSoft
+            text-left">
+
+            Consumidor final
+
+        </button>
+
+        @if (Loading)
+        {
+            <div class="p-4 text-sm opacity-70">
+                Cargando clientes...
+            </div>
+        }
+        else if (FilteredCustomers.Count == 0)
+        {
+            <div class="p-4 text-sm opacity-70">
+                No se encontraron clientes.
+            </div>
+        }
+        else
+        {
+            @foreach (var customer in FilteredCustomers)
+            {
+                <button type="button"
+                        @onclick="() => SelectCustomer(customer)"
+                        class="
+                    w-full
+                    p-4
+                    rounded-2xl
+                    text-left
+                    transition-all
+                    @(SelectedCustomerId == customer.Id
+                            ? "bg-primary text-white"
+                            : "bg-surfaceSoft hover:bg-primary/10")">
+
+                    <div class="font-semibold">
+                        @customer.Nombre
+                    </div>
+
+                    <div class="text-sm opacity-70">
+                        @customer.NumeroTelefono
+                    </div>
+
+                </button>
+            }
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback<CustomerDto?> OnSelected { get; set; }
+
+    private List<CustomerDto> Customers = [];
+
+    [Parameter]
+    public int? SelectedCustomerId { get; set; }
+
+    private bool Loading;
+
+    private string search = "";
+
+    private string Search
+    {
+        get => search;
+        set
+        {
+            search = value;
+
+            FilterCustomers();
+        }
+    }
+
+    private List<CustomerDto> FilteredCustomers = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCustomers();
+    }
+
+    private async Task LoadCustomers()
+    {
+        try
+        {
+            Loading = true;
+
+            var response =
+                await CustomerService.ObtenerClientes(
+                    page: 1,
+                    pageSize: 100,
+                    search: "");
+
+            Customers = response?.Data ?? [];
+
+            FilterCustomers();
+        }
+        finally
+        {
+            Loading = false;
+        }
+    }
+
+    private void FilterCustomers()
+    {
+        if (string.IsNullOrWhiteSpace(Search))
+        {
+            FilteredCustomers = Customers;
+        }
+        else
+        {
+            FilteredCustomers = Customers
+                .Where(x =>
+                    x.Nombre.Contains(
+                        Search,
+                        StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task SelectCustomer(CustomerDto customer)
+    {
+        await OnSelected.InvokeAsync(customer);
+    }
+
+    private async Task ClearCustomer()
+    {
+        await OnSelected.InvokeAsync(null);
+    }
+
+}

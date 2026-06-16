@@ -1,0 +1,40 @@
+﻿<button class="@GetButtonClasses()"
+        @onclick="OnClick">
+
+    @ChildContent
+
+</button>
+
+@code {
+
+    [Parameter]
+    public string Variant { get; set; } = "primary";
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    private string GetButtonClasses()
+    {
+        var baseClasses =
+    @"px-6 py-3
+      rounded-2xl
+      font-semibold
+      transition-all
+      duration-200
+      hover:-translate-y-[2px]
+      active:translate-y-0
+      active:scale-[0.98]";
+
+        return Variant switch
+        {
+            "secondary" =>
+                $"{baseClasses} bg-surface border border-borderColor hover:bg-surfaceSoft text-textPrimary",
+
+            _ =>
+                $"{baseClasses} bg-primary hover:bg-primary-dark text-white shadow-soft"
+        };
+    }
+}

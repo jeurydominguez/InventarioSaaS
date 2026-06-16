@@ -1,0 +1,334 @@
+﻿<section class="
+    py-32
+    px-4 sm:px-6 lg:px-8
+    relative
+    overflow-hidden
+    ">
+
+    <!-- BACKGROUND GLOW -->
+    <div class="
+        absolute
+        inset-0
+        bg-gradient-to-b
+        from-transparent
+        via-primary/5
+        to-transparent
+        ">
+    </div>
+
+    <div class="relative max-w-7xl mx-auto">
+
+        <!-- HEADER -->
+        <div class="text-center max-w-3xl mx-auto">
+
+            <div class="
+                inline-flex
+                items-center
+                px-4 py-2
+                rounded-full
+                bg-primary/10
+                text-primary
+                text-sm
+                font-semibold
+                mb-6
+                ">
+
+                Planes simples y escalables
+
+            </div>
+
+            <h2 class="
+                text-5xl
+                md:text-6xl
+                font-black
+                tracking-tight
+                text-textPrimary
+                leading-tight
+                ">
+
+                Planes para cada
+                <span class="text-primary">
+                    etapa de tu negocio
+                </span>
+
+            </h2>
+
+            <p class="
+                mt-8
+                text-xl
+                leading-relaxed
+                text-textMuted
+                ">
+
+                Empieza gratis y escala cuando tu empresa crezca.
+
+            </p>
+
+        </div>
+
+        <!-- TOGGLE -->
+        <div class="
+            mt-14
+            flex
+            justify-center
+            ">
+
+            <div class="
+                bg-surface
+                border border-borderColor
+                rounded-2xl
+                p-2
+                flex
+                gap-2
+                ">
+
+                <button class="
+                    px-6 py-3
+                    rounded-xl
+                    bg-primary
+                    text-white
+                    font-semibold
+                    ">
+
+                    Mensual
+
+                </button>
+
+                <button class="
+                    px-6 py-3
+                    rounded-xl
+                    text-textMuted
+                    font-semibold
+                    hover:bg-surfaceSoft
+                    transition-all
+                    ">
+
+                    Anual -20%
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- PRICING GRID -->
+        <div class="
+            mt-20
+            grid grid-cols-1
+            lg:grid-cols-3
+            gap-8
+            ">
+
+            @foreach (var plan in Plans)
+            {
+                <div class="
+                    relative
+                    rounded-[36px]
+                    border
+                    p-10
+                    transition-all
+                    duration-300
+                    hover:-translate-y-2
+                    hover:shadow-[0_30px_80px_rgba(0,0,0,0.08)]
+                    @(plan.Highlight
+                         ? "bg-gradient-to-br from-primary to-indigo-500 border-transparent text-white scale-[1.03]"
+                         : "bg-white border-borderColor")
+                    ">
+
+                    @if (plan.Highlight)
+                    {
+                        <div class="
+                            absolute
+                            top-0 left-1/2
+                            -translate-x-1/2
+                            -translate-y-1/2
+                            px-5 py-2
+                            rounded-full
+                            bg-white
+                            text-primary
+                            text-sm
+                            font-bold
+                            shadow-soft
+                            ">
+
+                            MÁS POPULAR
+
+                        </div>
+                    }
+
+                    <!-- PLAN -->
+                    <div>
+
+                        <h3 class="
+                            text-2xl
+                            font-bold
+                            @(plan.Highlight ? "text-white" : "text-textPrimary")
+                            ">
+
+                            @plan.Name
+
+                        </h3>
+
+                        <p class="
+                            mt-3
+                            @(plan.Highlight ? "text-white/80" : "text-textMuted")
+                            ">
+
+                            @plan.Description
+
+                        </p>
+
+                    </div>
+
+                    <!-- PRICE -->
+                    <div class="mt-10">
+
+                        <div class="flex items-end gap-2">
+
+                            <h4 class="
+                                text-6xl
+                                font-black
+                                tracking-tight
+                                ">
+
+                                $@plan.Price
+
+                            </h4>
+
+                            <span class="
+                                mb-2
+                                @(plan.Highlight ? "text-white/70" : "text-textMuted")
+                                ">
+
+                                /mes
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- BUTTON -->
+                    <button class="
+                        mt-10
+                        w-full
+                        py-4
+                        rounded-2xl
+                        font-semibold
+                        transition-all
+                        @(plan.Highlight
+                                ? "bg-white text-primary hover:bg-gray-100"
+                                : "bg-primary text-white hover:bg-primary-dark")
+                        ">
+
+                        Comenzar
+
+                    </button>
+
+                    <!-- FEATURES -->
+                    <div class="mt-10 space-y-5">
+
+                        @foreach (var feature in plan.Features)
+                        {
+                            <div class="flex items-center gap-4">
+
+                                <div class="
+                                    w-7 h-7
+                                    rounded-full
+                                    flex items-center justify-center
+                                    text-sm
+                                    @(plan.Highlight
+                                         ? "bg-white/20"
+                                         : "bg-primary/10 text-primary")
+                                    ">
+
+                                    ✓
+
+                                </div>
+
+                                <p class="
+                                    @(plan.Highlight
+                                       ? "text-white/90"
+                                       : "text-textMuted")
+                                    ">
+
+                                    @feature
+
+                                </p>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</section>
+
+@code {
+
+    private List<PricingPlan> Plans = new()
+    {
+        new()
+        {
+            Name = "Starter",
+            Description = "Perfecto para pequeños negocios.",
+            Price = "19",
+            Highlight = false,
+            Features = new()
+            {
+                "Facturación básica",
+                "Inventario",
+                "Reportes simples",
+                "1 usuario"
+            }
+        },
+
+        new()
+        {
+            Name = "Professional",
+            Description = "Ideal para empresas en crecimiento.",
+            Price = "49",
+            Highlight = true,
+            Features = new()
+            {
+                "Todo lo del Starter",
+                "Multiempresa",
+                "Reportes avanzados",
+                "Usuarios ilimitados",
+                "Dashboard premium"
+            }
+        },
+
+        new()
+        {
+            Name = "Enterprise",
+            Description = "Para operaciones empresariales.",
+            Price = "99",
+            Highlight = false,
+            Features = new()
+            {
+                "Todo lo del Professional",
+                "API Access",
+                "Integraciones",
+                "Soporte prioritario",
+                "Infraestructura dedicada"
+            }
+        }
+    };
+
+    public class PricingPlan
+    {
+        public string Name { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Price { get; set; } = "";
+        public bool Highlight { get; set; }
+        public List<string> Features { get; set; } = new();
+    }
+
+}

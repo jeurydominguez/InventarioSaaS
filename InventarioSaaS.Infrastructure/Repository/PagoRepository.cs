@@ -1,4 +1,6 @@
-﻿using InventarioSaaS.Domain.Entidades;
+﻿using InventarioSaaS.Application.Domain;
+using InventarioSaaS.Domain.DTO;
+using InventarioSaaS.Domain.Entidades;
 using InventarioSaaS.Domain.IRepository;
 using InventarioSaaS.Infrastructure.ApplicationDbContext;
 using Microsoft.AspNetCore.Http;
@@ -51,6 +53,33 @@ namespace InventarioSaaS.Infrastructure.Repository
             context.Pago.Add(pago);
             context.CuentasPorCobrar.Update(cuenta);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<PagedResponse<LeerPagoDto>>Obtener(int empresaId, PagoQuery queryparams)
+        {
+            var query = context.Pago
+                .AsNoTracking()
+                .Where(x => x.EmpresaId == empresaId)
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(queryparams.Search))
+            {
+                query = query.Where(x => x.CuentaPorCobrar.Cliente.Nombre == queryparams.Search);
+            }
+            if (queryparams.Fecha.HasValue)
+            {
+                query = query.Where(x => DateOnly.FromDateTime(x.Fecha) ==  queryparams.Fecha.Value);
+            }
+
+            var respuesta = query
+                .Select(x => new LeerPagoDto
+                {
+                    Id = x.Id,
+                    CuentasPorCobrarId = x.CuentasPorCobrarId,
+                    Monto = x.Monto,
+                    Fecha = x.Fecha
+                });
+
+            return await respuesta.PaginateAsync(queryparams.Page, queryparams.PageSize);
         }
     }
 }
